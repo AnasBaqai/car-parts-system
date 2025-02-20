@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+import api from "../../services/api";
 
 interface User {
   _id: string;
@@ -29,7 +27,7 @@ export const login = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, credentials);
+      const response = await api.post("/auth/login", credentials);
       localStorage.setItem("user", JSON.stringify(response.data));
       return response.data;
     } catch (error: any) {
@@ -45,7 +43,7 @@ export const register = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(`${API_URL}/auth/register`, userData);
+      const response = await api.post("/auth/register", userData);
       localStorage.setItem("user", JSON.stringify(response.data));
       return response.data;
     } catch (error: any) {
