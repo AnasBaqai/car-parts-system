@@ -9,6 +9,7 @@ export interface IPart extends Document {
   minQuantity: number;
   manufacturer: string;
   partNumber: string;
+  barcode: string;
 }
 
 const partSchema = new Schema(
@@ -51,6 +52,11 @@ const partSchema = new Schema(
       required: true,
       unique: true,
     },
+    barcode: {
+      type: String,
+      unique: true,
+      sparse: true, // Allows null/undefined values to not trigger uniqueness constraint
+    },
   },
   {
     timestamps: true,
@@ -58,6 +64,11 @@ const partSchema = new Schema(
 );
 
 // Index for faster searching
-partSchema.index({ name: "text", description: "text", partNumber: "text" });
+partSchema.index({
+  name: "text",
+  description: "text",
+  partNumber: "text",
+  barcode: "text",
+});
 
 export default mongoose.model<IPart>("Part", partSchema);

@@ -25,6 +25,26 @@ export const getPart = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+// Get part by barcode
+export const getPartByBarcode = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { barcode } = req.params;
+    const part = await Part.findOne({ barcode }).populate("category");
+
+    if (!part) {
+      res.status(404).json({ message: "Part not found with this barcode" });
+      return;
+    }
+
+    res.json(part);
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 // Create part
 export const createPart = async (
   req: Request,

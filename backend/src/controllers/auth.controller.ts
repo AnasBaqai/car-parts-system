@@ -10,16 +10,37 @@ const generateToken = (id: string) => {
 
 export const login = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { username, password } = req.body;
+    console.log("Login attempt:", {
+      email: req.body.email,
+      ip: req.ip,
+      timestamp: new Date().toISOString(),
+    });
 
-    const user: IUser | null = await User.findOne({ username });
+    const { email, password } = req.body;
 
-    if (!user || !(await user.comparePassword(password))) {
-      res.status(401).json({ message: "Invalid username or password" });
+    if (!email || !password) {
+      console.error("Login failed: Missing email or password");
+      res.status(400).json({ message: "Email and password are required" });
+      return;
+    }
+
+    const user: IUser | null = await User.findOne({ email });
+
+    if (!user) {
+      console.error(`Login failed: User not found - ${email}`);
+      res.status(401).json({ message: "Invalid email or password" });
+      return;
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      console.error(`Login failed: Invalid password for user - ${email}`);
+      res.status(401).json({ message: "Invalid email or password" });
       return;
     }
 
     const userId = user._id.toString();
+    console.log(`Login successful: ${email} (${userId})`);
 
     res.json({
       _id: userId,
@@ -28,18 +49,44 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       token: generateToken(userId),
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Login error:", error);
+    res.status(500).json({
+      message: "Server error during login",
+      error: error instanceof Error ? error.message : String(error),
+    });
   }
 };
 
 export const register = async (req: Request, res: Response): Promise<void> => {
   try {
+    console.log("Registration attempt:", {
+      username: req.body.username,
+      email: req.body.email,
+      ip: req.ip,
+      timestamp: new Date().toISOString(),
+    });
+
     const { username, email, password } = req.body;
+
+    if (!username || !email || !password) {
+      console.error("Registration failed: Missing required fields");
+      res.status(400).json({ message: "All fields are required" });
+      return;
+    }
 
     const userExists = await User.findOne({ $or: [{ email }, { username }] });
 
     if (userExists) {
-      res.status(400).json({ message: "User already exists" });
+      console.error(
+        `Registration failed: User already exists - ${username} / ${email}`
+      );
+      res.status(400).json({
+        message: "User already exists",
+        details:
+          userExists.email === email
+            ? "Email already in use"
+            : "Username already taken",
+      });
       return;
     }
 
@@ -50,6 +97,7 @@ export const register = async (req: Request, res: Response): Promise<void> => {
     });
 
     const userId = user._id.toString();
+    console.log(`Registration successful: ${username} (${userId})`);
 
     res.status(201).json({
       _id: userId,
@@ -58,7 +106,11 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       token: generateToken(userId),
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Registration error:", error);
+    res.status(500).json({
+      message: "Server error during registration",
+      error: error instanceof Error ? error.message : String(error),
+    });
   }
 };
 
@@ -70,6 +122,10 @@ export const getProfile = async (
     const user = await User.findById(req.user._id).select("-password");
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Get profile error:", error);
+    res.status(500).json({
+      message: "Server error",
+      error: error instanceof Error ? error.message : String(error),
+    });
   }
 };

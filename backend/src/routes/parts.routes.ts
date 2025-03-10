@@ -7,6 +7,7 @@ import {
   deletePart,
   searchParts,
   getLowStockParts,
+  getPartByBarcode,
 } from "../controllers/parts.controller";
 import { protect } from "../middleware/auth.middleware";
 
@@ -19,6 +20,7 @@ router.get("/", getParts);
 router.post("/", createPart);
 router.get("/search", searchParts);
 router.get("/low-stock", getLowStockParts);
+router.get("/barcode/:barcode", getPartByBarcode);
 router.get("/:id", getPart);
 router.put("/:id", updatePart);
 router.delete("/:id", deletePart);

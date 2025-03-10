@@ -3,6 +3,7 @@ import authReducer from "./slices/authSlice";
 import partsReducer from "./slices/partsSlice";
 import ordersReducer from "./slices/ordersSlice";
 import categoriesReducer from "./slices/categoriesSlice";
+import barcodeReducer from "./slices/barcodeSlice";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     parts: partsReducer,
     orders: ordersReducer,
     categories: categoriesReducer,
+    barcode: barcodeReducer,
   },
 });
 

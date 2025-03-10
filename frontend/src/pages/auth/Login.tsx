@@ -8,16 +8,24 @@ import {
   TextField,
   Button,
   Alert,
+  Collapse,
+  IconButton,
+  Divider,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { login, clearError } from "../../store/slices/authSlice";
 
 const Login: React.FC = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showDetails, setShowDetails] = useState(false);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { user, loading, error } = useAppSelector((state) => state.auth);
+  const { user, loading, error, errorDetails } = useAppSelector(
+    (state) => state.auth
+  );
 
   useEffect(() => {
     if (user) {
@@ -30,7 +38,15 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(login({ username, password }));
+    console.log("Submitting login form:", {
+      email,
+      apiUrl: process.env.REACT_APP_API_URL,
+    });
+    dispatch(login({ email, password }));
+  };
+
+  const toggleDetails = () => {
+    setShowDetails(!showDetails);
   };
 
   return (
@@ -59,7 +75,60 @@ const Login: React.FC = () => {
           <Typography component="h2" variant="h6" gutterBottom>
             Login
           </Typography>
-          {error && <Alert severity="error">{error}</Alert>}
+
+          {error && (
+            <Box sx={{ width: "100%", mb: 2 }}>
+              <Alert
+                severity="error"
+                action={
+                  errorDetails && (
+                    <IconButton
+                      aria-label="show more"
+                      color="inherit"
+                      size="small"
+                      onClick={toggleDetails}
+                    >
+                      {showDetails ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                    </IconButton>
+                  )
+                }
+              >
+                {error}
+              </Alert>
+
+              {errorDetails && (
+                <Collapse in={showDetails}>
+                  <Box
+                    sx={{ mt: 1, p: 2, bgcolor: "#f5f5f5", borderRadius: 1 }}
+                  >
+                    <Typography variant="subtitle2" color="text.secondary">
+                      Error Details:
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      component="pre"
+                      sx={{
+                        whiteSpace: "pre-wrap",
+                        wordBreak: "break-word",
+                        fontSize: "0.75rem",
+                        mt: 1,
+                      }}
+                    >
+                      {JSON.stringify(errorDetails, null, 2)}
+                    </Typography>
+                    <Divider sx={{ my: 1 }} />
+                    <Typography variant="subtitle2" color="text.secondary">
+                      API URL:
+                    </Typography>
+                    <Typography variant="body2" sx={{ fontSize: "0.75rem" }}>
+                      {process.env.REACT_APP_API_URL || "Not configured"}
+                    </Typography>
+                  </Box>
+                </Collapse>
+              )}
+            </Box>
+          )}
+
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -69,9 +138,10 @@ const Login: React.FC = () => {
               margin="normal"
               required
               fullWidth
-              label="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               autoFocus
             />
             <TextField

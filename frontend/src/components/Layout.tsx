@@ -22,6 +22,7 @@ import {
   ShoppingCart as OrderIcon,
   Assessment as ReportIcon,
   Logout as LogoutIcon,
+  QrCodeScanner as BarcodeIcon,
 } from "@mui/icons-material";
 import { useAppDispatch } from "../hooks/redux";
 import { logout } from "../store/slices/authSlice";
@@ -49,6 +50,7 @@ const Layout: React.FC = () => {
     { text: "Parts", icon: <BuildIcon />, path: "/parts" },
     { text: "Categories", icon: <CategoryIcon />, path: "/categories" },
     { text: "Orders", icon: <OrderIcon />, path: "/orders" },
+    { text: "Barcode Scanner", icon: <BarcodeIcon />, path: "/barcode" },
     { text: "Reports", icon: <ReportIcon />, path: "/reports" },
   ];
 
