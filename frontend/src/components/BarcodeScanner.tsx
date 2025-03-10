@@ -33,16 +33,20 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
   const [brightness, setBrightness] = useState(0);
   const [contrast, setContrast] = useState(0);
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const [frequencyThreshold, setFrequencyThreshold] = useState(5);
+  const [frequencyThreshold, setFrequencyThreshold] = useState(9);
+  const [detectionCount, setDetectionCount] = useState(0);
 
   // Barcode frequency tracking
   const barcodeFrequency = useRef<BarcodeFrequency>({});
   const lastDetectedCode = useRef<string | null>(null);
+  const currentDetectedCode = useRef<string | null>(null);
 
   // Reset frequency map when component unmounts or when scanner is stopped
   const resetFrequencyMap = () => {
     barcodeFrequency.current = {};
     lastDetectedCode.current = null;
+    currentDetectedCode.current = null;
+    setDetectionCount(0);
   };
 
   useEffect(() => {
@@ -172,9 +176,21 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
               if (result && result.codeResult) {
                 const code = result.codeResult.code;
                 if (code) {
-                  // Track frequency of this barcode
-                  barcodeFrequency.current[code] =
-                    (barcodeFrequency.current[code] || 0) + 1;
+                  // If we're detecting a new code, reset the counter
+                  if (currentDetectedCode.current !== code) {
+                    currentDetectedCode.current = code;
+                    barcodeFrequency.current[code] = 1;
+                    setDetectionCount(1);
+                  } else {
+                    // Increment the counter for this code
+                    barcodeFrequency.current[code] =
+                      (barcodeFrequency.current[code] || 0) + 1;
+                    setDetectionCount((prev) => prev + 1);
+                  }
+
+                  console.log(
+                    `Barcode detected: ${code}, count: ${barcodeFrequency.current[code]}, threshold: ${frequencyThreshold}`
+                  );
 
                   // Only accept a barcode if it's been detected multiple times
                   if (barcodeFrequency.current[code] >= frequencyThreshold) {
@@ -182,7 +198,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
                     if (lastDetectedCode.current !== code) {
                       lastDetectedCode.current = code;
                       console.log(
-                        `Detected barcode: ${code} (frequency: ${barcodeFrequency.current[code]})`
+                        `Confirmed barcode: ${code} (frequency: ${barcodeFrequency.current[code]})`
                       );
                       onDetected(code);
                       stopScanner();
@@ -328,19 +344,41 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
         )}
 
         {scanning && (
-          <Box
-            sx={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              zIndex: 10,
-              pointerEvents: "none",
-              border: "2px solid #f50057",
-              boxSizing: "border-box",
-            }}
-          />
+          <>
+            <Box
+              sx={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                zIndex: 10,
+                pointerEvents: "none",
+                border: "2px solid #f50057",
+                boxSizing: "border-box",
+              }}
+            />
+            {currentDetectedCode.current && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: 10,
+                  left: 0,
+                  width: "100%",
+                  zIndex: 20,
+                  backgroundColor: "rgba(0,0,0,0.7)",
+                  color: "white",
+                  padding: "5px 10px",
+                  textAlign: "center",
+                }}
+              >
+                <Typography variant="body2">
+                  Scanning: {currentDetectedCode.current} ({detectionCount}/
+                  {frequencyThreshold})
+                </Typography>
+              </Box>
+            )}
+          </>
         )}
       </Box>
 

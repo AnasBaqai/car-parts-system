@@ -34,28 +34,11 @@ import {
   createPart,
   updatePart,
   deletePart,
+  Part,
+  Category,
 } from "../../store/slices/partsSlice";
 import { getCategories } from "../../store/slices/categoriesSlice";
 import PartDialog from "../../components/parts/PartDialog";
-
-interface Category {
-  _id: string;
-  name: string;
-  description: string;
-}
-
-interface Part {
-  _id: string;
-  name: string;
-  description: string;
-  category: string;
-  price: number;
-  quantity: number;
-  minQuantity: number;
-  manufacturer: string;
-  partNumber: string;
-  barcode?: string;
-}
 
 type PartFormData = Omit<Part, "_id">;
 
@@ -81,17 +64,29 @@ const Parts: React.FC = () => {
   };
 
   const handleEditPart = (part: Part) => {
+    // Extract the category ID from the populated category object
+    const categoryId =
+      typeof part.category === "object" && part.category !== null
+        ? part.category._id
+        : part.category;
+
     setSelectedPart({
       ...part,
-      category: part.category.toString(),
+      category: categoryId,
     });
     setOpenDialog(true);
   };
 
   const handleDeleteClick = (part: Part) => {
+    // Extract the category ID from the populated category object
+    const categoryId =
+      typeof part.category === "object" && part.category !== null
+        ? part.category._id
+        : part.category;
+
     setPartToDelete({
       ...part,
-      category: part.category.toString(),
+      category: categoryId,
     });
     setOpenDeleteDialog(true);
   };
@@ -105,10 +100,21 @@ const Parts: React.FC = () => {
   };
 
   const handleSubmit = async (formData: PartFormData) => {
+    // Ensure category is a string ID
+    const updatedFormData = {
+      ...formData,
+      category:
+        typeof formData.category === "object" && formData.category !== null
+          ? formData.category._id
+          : formData.category,
+    };
+
     if (selectedPart) {
-      await dispatch(updatePart({ id: selectedPart._id, partData: formData }));
+      await dispatch(
+        updatePart({ id: selectedPart._id, partData: updatedFormData })
+      );
     } else {
-      await dispatch(createPart(formData));
+      await dispatch(createPart(updatedFormData));
     }
     setOpenDialog(false);
   };
@@ -122,9 +128,13 @@ const Parts: React.FC = () => {
         part.barcode.toLowerCase().includes(search.toLowerCase()))
   );
 
-  const getCategoryName = (categoryId: string) => {
-    const category = categories.find((c) => c._id === categoryId);
-    return category ? category.name : "Unknown";
+  const getCategoryName = (category: string | Category): string => {
+    if (typeof category === "object" && category !== null) {
+      return category.name;
+    }
+
+    const foundCategory = categories.find((c) => c._id === category);
+    return foundCategory ? foundCategory.name : "Unknown";
   };
 
   if (loading && parts.length === 0) {

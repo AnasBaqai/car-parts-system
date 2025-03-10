@@ -21,12 +21,14 @@ import CreateIcon from "@mui/icons-material/Create";
 import { useAppSelector } from "../../hooks/redux";
 import BarcodeScanner from "../BarcodeScanner";
 import BarcodeGenerator from "../BarcodeGenerator";
+import { Part as PartType, Category } from "../../store/slices/partsSlice";
 
+// Define a simplified Part type for the form that only uses string for category
 interface Part {
   _id: string;
   name: string;
   description: string;
-  category: string;
+  category: string; // Always use string ID for category in the form
   price: number;
   quantity: number;
   minQuantity: number;
@@ -41,7 +43,7 @@ interface PartDialogProps {
   open: boolean;
   onClose: () => void;
   onSubmit: (part: PartFormData) => void;
-  initialData?: Part | null;
+  initialData?: PartType | null;
   title: string;
 }
 
@@ -92,10 +94,17 @@ const PartDialog: React.FC<PartDialogProps> = ({
 
   useEffect(() => {
     if (initialData) {
+      // Extract the category ID from the populated category object
+      const categoryId =
+        typeof initialData.category === "object" &&
+        initialData.category !== null
+          ? initialData.category._id
+          : initialData.category;
+
       setFormData({
         name: initialData.name,
         description: initialData.description,
-        category: initialData.category,
+        category: categoryId,
         price: initialData.price,
         quantity: initialData.quantity,
         minQuantity: initialData.minQuantity,

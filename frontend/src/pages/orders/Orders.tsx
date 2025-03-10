@@ -24,11 +24,14 @@ import {
   IconButton,
   Alert,
   Snackbar,
+  TablePagination,
+  Tooltip,
 } from "@mui/material";
 import { Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { getOrders, updateOrderStatus } from "../../store/slices/ordersSlice";
+import { format } from "date-fns";
 
 interface OrderItem {
   part: string;
@@ -74,6 +77,8 @@ const Orders: React.FC = () => {
     message: "",
     severity: "info",
   });
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const dispatch = useAppDispatch();
   const { orders, loading } = useAppSelector((state) => state.orders);
@@ -121,12 +126,44 @@ const Orders: React.FC = () => {
     }
   };
 
-  const filteredOrders = orders.filter(
-    (order) =>
-      order.orderNumber.toLowerCase().includes(search.toLowerCase()) ||
-      (order.customerName &&
-        order.customerName.toLowerCase().includes(search.toLowerCase()))
+  const formatDate = (dateString: string) => {
+    try {
+      return format(new Date(dateString), "MMM dd, yyyy h:mm a");
+    } catch (error) {
+      return "Invalid date";
+    }
+  };
+
+  // Filter and sort orders by date (most recent first)
+  const filteredOrders = orders
+    .filter(
+      (order) =>
+        (order.customerName &&
+          order.customerName.toLowerCase().includes(search.toLowerCase())) ||
+        (order.orderNumber &&
+          order.orderNumber.toLowerCase().includes(search.toLowerCase()))
+    )
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+
+  // Paginate orders
+  const paginatedOrders = filteredOrders.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
   );
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   const handleCloseAlert = () => {
     setAlertInfo((prev) => ({ ...prev, open: false }));
@@ -260,7 +297,7 @@ const Orders: React.FC = () => {
                 label="Search orders"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search by order number or customer name"
+                placeholder="Search by customer name"
               />
             </Grid>
             <Grid item xs={12}>
@@ -297,7 +334,7 @@ const Orders: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Order Number</TableCell>
+              <TableCell>Date</TableCell>
               <TableCell>Customer</TableCell>
               <TableCell>Items</TableCell>
               <TableCell>Total Amount</TableCell>
@@ -307,9 +344,13 @@ const Orders: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredOrders.map((order) => (
+            {paginatedOrders.map((order) => (
               <TableRow key={order._id}>
-                <TableCell>{order.orderNumber}</TableCell>
+                <TableCell>
+                  <Tooltip title={order.orderNumber}>
+                    <span>{formatDate(order.createdAt)}</span>
+                  </Tooltip>
+                </TableCell>
                 <TableCell>
                   {order.customerName || "N/A"}
                   {order.customerPhone && <br />}
@@ -360,6 +401,15 @@ const Orders: React.FC = () => {
             ))}
           </TableBody>
         </Table>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={filteredOrders.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </TableContainer>
 
       <Dialog

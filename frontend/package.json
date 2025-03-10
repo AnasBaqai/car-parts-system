@@ -24,6 +24,7 @@
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "axios": "^1.6.7",
+    "date-fns": "^4.1.0",
     "electron": "^28.2.3",
     "electron-builder": "^24.9.1",
     "quagga": "^0.12.1",
@@ -45,5 +46,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/date-fns": "^2.5.3"
   }
 }

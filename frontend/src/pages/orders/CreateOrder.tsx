@@ -27,10 +27,15 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  IconButton,
+  Tooltip,
+  Tab,
+  Tabs,
 } from "@mui/material";
 import {
   ShoppingCart as CartIcon,
   Search as SearchIcon,
+  QrCodeScanner as ScannerIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
@@ -40,6 +45,7 @@ import {
   createOrder,
   CreateOrderRequest,
 } from "../../store/slices/ordersSlice";
+import BarcodeOrderScanner from "../../components/BarcodeOrderScanner";
 
 interface Category {
   _id: string;
@@ -55,6 +61,7 @@ interface ApiPart {
   price: number;
   category: Category | string;
   quantity: number;
+  barcode?: string;
 }
 
 interface SelectedPart {
@@ -62,6 +69,28 @@ interface SelectedPart {
   name: string;
   price: number;
   quantity: number;
+}
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`order-tabpanel-${index}`}
+      aria-labelledby={`order-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ pt: 2 }}>{children}</Box>}
+    </div>
+  );
 }
 
 const CreateOrder: React.FC = () => {
@@ -86,6 +115,8 @@ const CreateOrder: React.FC = () => {
     message: "",
     severity: "info",
   });
+  const [tabValue, setTabValue] = useState(0);
+  const [barcodeInput, setBarcodeInput] = useState("");
 
   const { categories, loading: categoriesLoading } = useAppSelector(
     (state) => state.categories
@@ -260,6 +291,129 @@ const CreateOrder: React.FC = () => {
     }
   };
 
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue);
+  };
+
+  const handleBarcodeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBarcodeInput(e.target.value);
+  };
+
+  const handleBarcodeSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (barcodeInput.trim()) {
+      addPartByBarcode(barcodeInput.trim());
+      setBarcodeInput("");
+    }
+  };
+
+  const handleBarcodeDetected = (detectedBarcode: string) => {
+    console.log("Barcode detected:", detectedBarcode);
+    addPartByBarcode(detectedBarcode);
+  };
+
+  const addPartByBarcode = (barcode: string) => {
+    // Find the part with the matching barcode
+    const part = parts.find((p) => p.barcode === barcode);
+
+    if (!part) {
+      setAlertInfo({
+        open: true,
+        message: `No part found with barcode: ${barcode}`,
+        severity: "error",
+      });
+      return;
+    }
+
+    // Check if we have stock
+    if (part.quantity <= 0) {
+      setAlertInfo({
+        open: true,
+        message: `${part.name} is out of stock`,
+        severity: "error",
+      });
+      return;
+    }
+
+    // Check if the part is already in the order
+    const existingPartIndex = selectedParts.findIndex(
+      (p) => p._id === part._id
+    );
+
+    if (existingPartIndex >= 0) {
+      // Part already exists, increment quantity if stock allows
+      const currentQuantity = selectedParts[existingPartIndex].quantity;
+
+      if (currentQuantity + 1 > part.quantity) {
+        setAlertInfo({
+          open: true,
+          message: `Cannot add more ${part.name} (only ${part.quantity} in stock)`,
+          severity: "warning",
+        });
+        return;
+      }
+
+      // Update the quantity
+      const updatedParts = [...selectedParts];
+      updatedParts[existingPartIndex] = {
+        ...updatedParts[existingPartIndex],
+        quantity: currentQuantity + 1,
+      };
+
+      setSelectedParts(updatedParts);
+
+      setAlertInfo({
+        open: true,
+        message: `Added another ${part.name} (Total: ${currentQuantity + 1})`,
+        severity: "success",
+      });
+    } else {
+      // Add new part to the order
+      setSelectedParts([
+        ...selectedParts,
+        {
+          _id: part._id,
+          name: part.name,
+          price: part.price,
+          quantity: 1,
+        },
+      ]);
+
+      setAlertInfo({
+        open: true,
+        message: `Added ${part.name} to the order`,
+        severity: "success",
+      });
+    }
+  };
+
+  const removeSelectedPart = (partId: string) => {
+    setSelectedParts(selectedParts.filter((part) => part._id !== partId));
+  };
+
+  const updateSelectedPartQuantity = (partId: string, newQuantity: number) => {
+    if (newQuantity <= 0) {
+      removeSelectedPart(partId);
+      return;
+    }
+
+    const part = parts.find((p) => p._id === partId);
+    if (part && newQuantity > part.quantity) {
+      setAlertInfo({
+        open: true,
+        message: `Cannot add more than available stock (${part.quantity} available)`,
+        severity: "warning",
+      });
+      return;
+    }
+
+    setSelectedParts(
+      selectedParts.map((part) =>
+        part._id === partId ? { ...part, quantity: newQuantity } : part
+      )
+    );
+  };
+
   if (categoriesLoading || partsLoading) {
     return (
       <Box
@@ -325,6 +479,76 @@ const CreateOrder: React.FC = () => {
             </CardContent>
           </Card>
 
+          <Card sx={{ mb: 3 }}>
+            <CardContent>
+              <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 2 }}>
+                <Tabs value={tabValue} onChange={handleTabChange}>
+                  <Tab label="Browse Categories" />
+                  <Tab label="Scan Barcode" />
+                </Tabs>
+              </Box>
+
+              <TabPanel value={tabValue} index={0}>
+                <Button
+                  variant="contained"
+                  onClick={() => setOpenPartsModal(true)}
+                  disabled={!selectedCategory}
+                  sx={{ mb: 2 }}
+                >
+                  Select Parts
+                </Button>
+                <Typography variant="body2" color="text.secondary">
+                  Select a category from the right panel, then click "Select
+                  Parts" to add items to your order.
+                </Typography>
+              </TabPanel>
+
+              <TabPanel value={tabValue} index={1}>
+                <Paper sx={{ p: 2, mb: 3 }}>
+                  <form onSubmit={handleBarcodeSubmit}>
+                    <Grid container spacing={2} alignItems="center">
+                      <Grid item xs={12} sm={7}>
+                        <TextField
+                          fullWidth
+                          label="Scan Barcode"
+                          variant="outlined"
+                          value={barcodeInput}
+                          onChange={handleBarcodeInputChange}
+                          placeholder="Enter barcode or use scanner"
+                        />
+                      </Grid>
+                      <Grid item xs={8} sm={3}>
+                        <Button
+                          fullWidth
+                          type="submit"
+                          variant="contained"
+                          color="primary"
+                          disabled={!barcodeInput.trim()}
+                        >
+                          Add Item
+                        </Button>
+                      </Grid>
+                      <Grid
+                        item
+                        xs={4}
+                        sm={2}
+                        sx={{ display: "flex", justifyContent: "center" }}
+                      >
+                        <BarcodeOrderScanner
+                          onBarcodeDetected={handleBarcodeDetected}
+                        />
+                      </Grid>
+                    </Grid>
+                  </form>
+                </Paper>
+                <Typography variant="body2" color="text.secondary">
+                  Scan a barcode or use the scanner button to add items directly
+                  to your order.
+                </Typography>
+              </TabPanel>
+            </CardContent>
+          </Card>
+
           <Card>
             <CardContent>
               <Typography variant="h6" gutterBottom>
@@ -335,34 +559,90 @@ const CreateOrder: React.FC = () => {
                   <TableHead>
                     <TableRow>
                       <TableCell>Part Name</TableCell>
-                      <TableCell align="right">Quantity</TableCell>
+                      <TableCell align="center">Quantity</TableCell>
                       <TableCell align="right">Price</TableCell>
                       <TableCell align="right">Total</TableCell>
+                      <TableCell align="right">Actions</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {selectedParts.map((part) => (
-                      <TableRow key={part._id}>
-                        <TableCell>{part.name}</TableCell>
-                        <TableCell align="right">{part.quantity}</TableCell>
-                        <TableCell align="right">
-                          ${part.price.toFixed(2)}
-                        </TableCell>
-                        <TableCell align="right">
-                          ${(part.price * part.quantity).toFixed(2)}
+                    {selectedParts.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={5} align="center">
+                          No parts selected yet. Browse categories or scan
+                          barcodes to add parts.
                         </TableCell>
                       </TableRow>
-                    ))}
-                    <TableRow>
-                      <TableCell colSpan={3}>
-                        <Typography variant="h6">Total</Typography>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Typography variant="h6">
-                          ${calculateTotal().toFixed(2)}
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
+                    ) : (
+                      selectedParts.map((part) => (
+                        <TableRow key={part._id}>
+                          <TableCell>{part.name}</TableCell>
+                          <TableCell align="center">
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <IconButton
+                                size="small"
+                                onClick={() =>
+                                  updateSelectedPartQuantity(
+                                    part._id,
+                                    part.quantity - 1
+                                  )
+                                }
+                              >
+                                -
+                              </IconButton>
+                              <Typography sx={{ mx: 1 }}>
+                                {part.quantity}
+                              </Typography>
+                              <IconButton
+                                size="small"
+                                onClick={() =>
+                                  updateSelectedPartQuantity(
+                                    part._id,
+                                    part.quantity + 1
+                                  )
+                                }
+                              >
+                                +
+                              </IconButton>
+                            </Box>
+                          </TableCell>
+                          <TableCell align="right">
+                            ${part.price.toFixed(2)}
+                          </TableCell>
+                          <TableCell align="right">
+                            ${(part.price * part.quantity).toFixed(2)}
+                          </TableCell>
+                          <TableCell align="right">
+                            <IconButton
+                              color="error"
+                              size="small"
+                              onClick={() => removeSelectedPart(part._id)}
+                            >
+                              ×
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                    {selectedParts.length > 0 && (
+                      <TableRow>
+                        <TableCell colSpan={3}>
+                          <Typography variant="h6">Total</Typography>
+                        </TableCell>
+                        <TableCell align="right">
+                          <Typography variant="h6">
+                            ${calculateTotal().toFixed(2)}
+                          </Typography>
+                        </TableCell>
+                        <TableCell />
+                      </TableRow>
+                    )}
                   </TableBody>
                 </Table>
               </TableContainer>

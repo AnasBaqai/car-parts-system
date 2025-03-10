@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+import api from "../../services/api";
 
 interface OrderItem {
   part: string;
@@ -63,7 +61,7 @@ export const getOrders = createAsyncThunk(
           Authorization: `Bearer ${auth.user.token}`,
         },
       };
-      const response = await axios.get(`${API_URL}/orders`, config);
+      const response = await api.get("/orders", config);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -84,7 +82,7 @@ export const createOrder = createAsyncThunk(
           Authorization: `Bearer ${auth.user.token}`,
         },
       };
-      const response = await axios.post(`${API_URL}/orders`, orderData, config);
+      const response = await api.post("/orders", orderData, config);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -122,8 +120,8 @@ export const updateOrderStatus = createAsyncThunk(
         paymentMethod,
         config,
       });
-      const response = await axios.put(
-        `${API_URL}/orders/${id}`,
+      const response = await api.put(
+        `/orders/${id}`,
         { status, paymentMethod },
         config
       );
@@ -154,8 +152,8 @@ export const getSalesReport = createAsyncThunk(
           Authorization: `Bearer ${auth.user.token}`,
         },
       };
-      const response = await axios.get(
-        `${API_URL}/orders/report?startDate=${startDate}&endDate=${endDate}`,
+      const response = await api.get(
+        `/orders/report?startDate=${startDate}&endDate=${endDate}`,
         config
       );
       return response.data;

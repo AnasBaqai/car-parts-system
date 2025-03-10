@@ -22,7 +22,6 @@ import Categories from "./pages/categories/Categories";
 import Orders from "./pages/orders/Orders";
 import CreateOrder from "./pages/orders/CreateOrder";
 import Reports from "./pages/reports/Reports";
-import BarcodeOrderPage from "./pages/barcode/BarcodeOrderPage";
 
 const App: React.FC = () => {
   return (
@@ -72,14 +71,6 @@ const App: React.FC = () => {
                 element={
                   <PrivateRoute>
                     <CreateOrder />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/barcode"
-                element={
-                  <PrivateRoute>
-                    <BarcodeOrderPage />
                   </PrivateRoute>
                 }
               />

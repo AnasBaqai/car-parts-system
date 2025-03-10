@@ -1,11 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../services/api";
 
+export interface Category {
+  _id: string;
+  name: string;
+  description?: string;
+}
+
 export interface Part {
   _id: string;
   name: string;
   description: string;
-  category: string; // Store only the category ID
+  category: string | Category; // Can be either a string ID or a populated Category object
   price: number;
   quantity: number;
   minQuantity: number;
@@ -44,7 +50,16 @@ export const getLowStockParts = createAsyncThunk(
 export const createPart = createAsyncThunk(
   "parts/createPart",
   async (partData: Omit<Part, "_id">) => {
-    const response = await api.post("/parts", partData);
+    // Ensure category is a string ID
+    const updatedPartData = {
+      ...partData,
+      category:
+        typeof partData.category === "object" && partData.category !== null
+          ? (partData.category as Category)._id
+          : partData.category,
+    };
+
+    const response = await api.post("/parts", updatedPartData);
     return response.data;
   }
 );
@@ -52,7 +67,16 @@ export const createPart = createAsyncThunk(
 export const updatePart = createAsyncThunk(
   "parts/updatePart",
   async ({ id, partData }: { id: string; partData: Partial<Part> }) => {
-    const response = await api.put(`/parts/${id}`, partData);
+    // Ensure category is a string ID
+    const updatedPartData = {
+      ...partData,
+      category:
+        typeof partData.category === "object" && partData.category !== null
+          ? (partData.category as Category)._id
+          : partData.category,
+    };
+
+    const response = await api.put(`/parts/${id}`, updatedPartData);
     return response.data;
   }
 );

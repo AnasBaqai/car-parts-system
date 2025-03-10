@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+import api from "../../services/api";
 
 interface Category {
   _id: string;
@@ -26,15 +24,9 @@ const initialState: CategoriesState = {
 // Get all categories
 export const getCategories = createAsyncThunk(
   "categories/getCategories",
-  async (_, { rejectWithValue, getState }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const { auth } = getState() as { auth: { user: { token: string } } };
-      const config = {
-        headers: {
-          Authorization: `Bearer ${auth.user.token}`,
-        },
-      };
-      const response = await axios.get(`${API_URL}/categories`, config);
+      const response = await api.get("/categories");
       return response.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -47,22 +39,9 @@ export const getCategories = createAsyncThunk(
 // Create category
 export const createCategory = createAsyncThunk(
   "categories/createCategory",
-  async (
-    categoryData: Omit<Category, "_id">,
-    { rejectWithValue, getState }
-  ) => {
+  async (categoryData: Omit<Category, "_id">, { rejectWithValue }) => {
     try {
-      const { auth } = getState() as { auth: { user: { token: string } } };
-      const config = {
-        headers: {
-          Authorization: `Bearer ${auth.user.token}`,
-        },
-      };
-      const response = await axios.post(
-        `${API_URL}/categories`,
-        categoryData,
-        config
-      );
+      const response = await api.post("/categories", categoryData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -77,20 +56,10 @@ export const updateCategory = createAsyncThunk(
   "categories/updateCategory",
   async (
     { id, categoryData }: { id: string; categoryData: Partial<Category> },
-    { rejectWithValue, getState }
+    { rejectWithValue }
   ) => {
     try {
-      const { auth } = getState() as { auth: { user: { token: string } } };
-      const config = {
-        headers: {
-          Authorization: `Bearer ${auth.user.token}`,
-        },
-      };
-      const response = await axios.put(
-        `${API_URL}/categories/${id}`,
-        categoryData,
-        config
-      );
+      const response = await api.put(`/categories/${id}`, categoryData);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(
@@ -103,15 +72,9 @@ export const updateCategory = createAsyncThunk(
 // Delete category
 export const deleteCategory = createAsyncThunk(
   "categories/deleteCategory",
-  async (id: string, { rejectWithValue, getState }) => {
+  async (id: string, { rejectWithValue }) => {
     try {
-      const { auth } = getState() as { auth: { user: { token: string } } };
-      const config = {
-        headers: {
-          Authorization: `Bearer ${auth.user.token}`,
-        },
-      };
-      await axios.delete(`${API_URL}/categories/${id}`, config);
+      await api.delete(`/categories/${id}`);
       return id;
     } catch (error: any) {
       return rejectWithValue(

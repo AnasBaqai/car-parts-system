@@ -6,7 +6,8 @@ export const getParts = async (req: Request, res: Response): Promise<void> => {
   try {
     const parts = await Part.find().populate("category");
     res.json(parts);
-  } catch (error) {
+  } catch (error: any) {
+    console.error("Error fetching parts:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -20,7 +21,8 @@ export const getPart = async (req: Request, res: Response): Promise<void> => {
       return;
     }
     res.json(part);
-  } catch (error) {
+  } catch (error: any) {
+    console.error(`Error fetching part with ID ${req.params.id}:`, error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -40,7 +42,11 @@ export const getPartByBarcode = async (
     }
 
     res.json(part);
-  } catch (error) {
+  } catch (error: any) {
+    console.error(
+      `Error fetching part with barcode ${req.params.barcode}:`,
+      error
+    );
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -51,10 +57,12 @@ export const createPart = async (
   res: Response
 ): Promise<void> => {
   try {
+    console.log("Creating part with data:", req.body);
     const part = await Part.create(req.body);
     res.status(201).json(part);
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
+  } catch (error: any) {
+    console.error("Error creating part:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -64,17 +72,36 @@ export const updatePart = async (
   res: Response
 ): Promise<void> => {
   try {
+    console.log("Updating part with ID:", req.params.id);
+    console.log("Update data:", JSON.stringify(req.body, null, 2));
+
     const part = await Part.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
-    });
+    }).populate("category");
+
     if (!part) {
+      console.error(`Part with ID ${req.params.id} not found for update`);
       res.status(404).json({ message: "Part not found" });
       return;
     }
+
+    console.log("Part updated successfully:", part);
     res.json(part);
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
+  } catch (error: any) {
+    console.error(`Error updating part with ID ${req.params.id}:`, error);
+    console.error("Error details:", error.message);
+    if (error.name === "ValidationError") {
+      console.error("Validation error details:", error.errors);
+    }
+    if (error.name === "CastError") {
+      console.error("Cast error details:", error);
+    }
+    res.status(500).json({
+      message: "Server error during update",
+      error: error.message,
+      details: error.name,
+    });
   }
 };
 
@@ -84,14 +111,18 @@ export const deletePart = async (
   res: Response
 ): Promise<void> => {
   try {
+    console.log("Deleting part with ID:", req.params.id);
     const part = await Part.findByIdAndDelete(req.params.id);
     if (!part) {
+      console.error(`Part with ID ${req.params.id} not found for deletion`);
       res.status(404).json({ message: "Part not found" });
       return;
     }
+    console.log("Part deleted successfully");
     res.json({ message: "Part removed" });
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
+  } catch (error: any) {
+    console.error(`Error deleting part with ID ${req.params.id}:`, error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -102,6 +133,7 @@ export const searchParts = async (
 ): Promise<void> => {
   try {
     const { query } = req.query;
+    console.log("Searching parts with query:", query);
     const parts = await Part.find(
       { $text: { $search: query as string } },
       { score: { $meta: "textScore" } }
@@ -109,8 +141,9 @@ export const searchParts = async (
       .sort({ score: { $meta: "textScore" } })
       .populate("category");
     res.json(parts);
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
+  } catch (error: any) {
+    console.error("Error searching parts:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -124,7 +157,8 @@ export const getLowStockParts = async (
       $expr: { $lte: ["$quantity", "$minQuantity"] },
     }).populate("category");
     res.json(parts);
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
+  } catch (error: any) {
+    console.error("Error fetching low stock parts:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };

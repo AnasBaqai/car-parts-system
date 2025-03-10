@@ -26,7 +26,6 @@ const BarcodeOrderScanner: React.FC<BarcodeOrderScannerProps> = ({
   disabled = false,
 }) => {
   const [open, setOpen] = useState(false);
-  const [scannerMode, setScannerMode] = useState<"scan" | "generate">("scan");
   const [feedback, setFeedback] = useState<{
     open: boolean;
     message: string;
@@ -93,42 +92,16 @@ const BarcodeOrderScanner: React.FC<BarcodeOrderScannerProps> = ({
           >
             <Typography variant="h6">Barcode Scanner</Typography>
             <Typography variant="body2" color="text.secondary">
-              Scan a barcode to add an item to your order
+              Point your camera at a barcode to scan
             </Typography>
           </Box>
         </DialogTitle>
         <DialogContent>
-          <Box sx={{ mb: 2 }}>
-            <Button
-              variant={scannerMode === "scan" ? "contained" : "outlined"}
-              onClick={() => setScannerMode("scan")}
-              sx={{ mr: 1 }}
-            >
-              Scan with Camera
-            </Button>
-            <Button
-              variant={scannerMode === "generate" ? "contained" : "outlined"}
-              onClick={() => setScannerMode("generate")}
-            >
-              Generate Test Barcode
-            </Button>
-          </Box>
-
-          {scannerMode === "scan" ? (
-            <BarcodeScanner
-              onDetected={handleBarcodeDetected}
-              onClose={handleClose}
-            />
-          ) : (
-            <BarcodeGenerator
-              onGenerate={handleBarcodeDetected}
-              onClose={handleClose}
-            />
-          )}
+          <BarcodeScanner
+            onDetected={handleBarcodeDetected}
+            onClose={handleClose}
+          />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-        </DialogActions>
       </Dialog>
 
       <Snackbar
