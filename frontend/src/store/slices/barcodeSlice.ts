@@ -141,10 +141,9 @@ const barcodeSlice = createSlice({
         );
 
         if (existingItemIndex !== -1) {
-          // Increment quantity if item already exists
-          state.items[existingItemIndex].quantity += 1;
-          // Update total amount
-          state.totalAmount += action.payload.price;
+          // Don't automatically increment quantity - just notify the user
+          // that the item is already in the cart
+          state.error = `"${action.payload.name}" is already in your cart. You can adjust the quantity manually.`;
         } else {
           // Add new item if it doesn't exist
           state.items.push({

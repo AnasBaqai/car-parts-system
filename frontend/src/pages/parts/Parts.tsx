@@ -20,11 +20,13 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Tooltip,
 } from "@mui/material";
 import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
+  QrCode as QrCodeIcon,
 } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import {
@@ -52,6 +54,7 @@ interface Part {
   minQuantity: number;
   manufacturer: string;
   partNumber: string;
+  barcode?: string;
 }
 
 type PartFormData = Omit<Part, "_id">;
@@ -114,7 +117,9 @@ const Parts: React.FC = () => {
     (part) =>
       part.name.toLowerCase().includes(search.toLowerCase()) ||
       part.partNumber.toLowerCase().includes(search.toLowerCase()) ||
-      part.manufacturer.toLowerCase().includes(search.toLowerCase())
+      part.manufacturer.toLowerCase().includes(search.toLowerCase()) ||
+      (part.barcode &&
+        part.barcode.toLowerCase().includes(search.toLowerCase()))
   );
 
   const getCategoryName = (categoryId: string) => {
@@ -164,7 +169,7 @@ const Parts: React.FC = () => {
             label="Search parts"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by name, part number, or manufacturer"
+            placeholder="Search by name, part number, barcode, or manufacturer"
           />
         </CardContent>
       </Card>
@@ -179,6 +184,7 @@ const Parts: React.FC = () => {
               <TableCell>Manufacturer</TableCell>
               <TableCell align="right">Price</TableCell>
               <TableCell align="right">Quantity</TableCell>
+              <TableCell>Barcode</TableCell>
               <TableCell>Status</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
@@ -192,6 +198,26 @@ const Parts: React.FC = () => {
                 <TableCell>{part.manufacturer}</TableCell>
                 <TableCell align="right">${part.price.toFixed(2)}</TableCell>
                 <TableCell align="right">{part.quantity}</TableCell>
+                <TableCell>
+                  {part.barcode ? (
+                    <Tooltip title={part.barcode}>
+                      <Box sx={{ display: "flex", alignItems: "center" }}>
+                        <QrCodeIcon fontSize="small" sx={{ mr: 1 }} />
+                        <Typography
+                          variant="body2"
+                          noWrap
+                          sx={{ maxWidth: 100 }}
+                        >
+                          {part.barcode}
+                        </Typography>
+                      </Box>
+                    </Tooltip>
+                  ) : (
+                    <Typography variant="body2" color="text.secondary">
+                      No barcode
+                    </Typography>
+                  )}
+                </TableCell>
                 <TableCell>
                   <Chip
                     label={

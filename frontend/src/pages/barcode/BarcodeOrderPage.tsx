@@ -24,6 +24,7 @@ import {
   Alert,
   Snackbar,
   CircularProgress,
+  Divider,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
@@ -38,8 +39,9 @@ import {
   updateItemQuantity,
   setCurrentBarcode,
 } from "../../store/slices/barcodeSlice";
+import BarcodeOrderScanner from "../../components/BarcodeOrderScanner";
 
-const BarcodeScanner: React.FC = () => {
+const BarcodeOrderPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const { items, loading, error, totalAmount } = useAppSelector(
     (state) => state.barcode
@@ -82,6 +84,38 @@ const BarcodeScanner: React.FC = () => {
       if (barcodeInputRef.current) {
         barcodeInputRef.current.focus();
       }
+    }
+  };
+
+  // Handle barcode detected from scanner
+  const handleBarcodeDetected = (detectedBarcode: string) => {
+    console.log("Barcode detected:", detectedBarcode);
+
+    // Check if the item is already in the cart
+    const existingItem = items.find(
+      (item) => item.part.barcode === detectedBarcode
+    );
+
+    if (existingItem) {
+      // If the item is already in the cart, increment its quantity
+      dispatch(
+        updateItemQuantity({
+          partId: existingItem.part._id,
+          quantity: existingItem.quantity + 1,
+        })
+      );
+
+      // Show a success message or notification
+      setAlertInfo({
+        open: true,
+        message: `Added another ${existingItem.part.name} (Total: ${
+          existingItem.quantity + 1
+        })`,
+        severity: "success",
+      });
+    } else {
+      // If the item is not in the cart, add it
+      dispatch(getPartByBarcode(detectedBarcode));
     }
   };
 
@@ -192,7 +226,7 @@ const BarcodeScanner: React.FC = () => {
       <Paper sx={{ p: 2, mb: 3 }}>
         <form onSubmit={handleBarcodeSubmit}>
           <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} sm={8}>
+            <Grid item xs={12} sm={7}>
               <TextField
                 fullWidth
                 label="Scan Barcode"
@@ -202,9 +236,10 @@ const BarcodeScanner: React.FC = () => {
                 inputRef={barcodeInputRef}
                 autoFocus
                 disabled={loading}
+                placeholder="Enter barcode or use scanner"
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={8} sm={3}>
               <Button
                 fullWidth
                 type="submit"
@@ -214,6 +249,17 @@ const BarcodeScanner: React.FC = () => {
               >
                 {loading ? <CircularProgress size={24} /> : "Add Item"}
               </Button>
+            </Grid>
+            <Grid
+              item
+              xs={4}
+              sm={2}
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              <BarcodeOrderScanner
+                onBarcodeDetected={handleBarcodeDetected}
+                disabled={loading}
+              />
             </Grid>
           </Grid>
         </form>
@@ -254,6 +300,15 @@ const BarcodeScanner: React.FC = () => {
                       <Typography variant="caption" color="textSecondary">
                         {item.part.partNumber}
                       </Typography>
+                      {item.part.barcode && (
+                        <Typography
+                          variant="caption"
+                          color="textSecondary"
+                          display="block"
+                        >
+                          Barcode: {item.part.barcode}
+                        </Typography>
+                      )}
                     </TableCell>
                     <TableCell>${item.part.price.toFixed(2)}</TableCell>
                     <TableCell align="center">
@@ -458,4 +513,4 @@ const BarcodeScanner: React.FC = () => {
   );
 };
 
-export default BarcodeScanner;
+export default BarcodeOrderPage;

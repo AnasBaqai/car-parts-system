@@ -11,6 +11,7 @@ export interface Part {
   minQuantity: number;
   manufacturer: string;
   partNumber: string;
+  barcode?: string;
 }
 
 interface PartsState {
@@ -61,6 +62,14 @@ export const deletePart = createAsyncThunk(
   async (id: string) => {
     await api.delete(`/parts/${id}`);
     return id;
+  }
+);
+
+export const getPartByBarcode = createAsyncThunk(
+  "parts/getPartByBarcode",
+  async (barcode: string) => {
+    const response = await api.get(`/parts/barcode/${barcode}`);
+    return response.data;
   }
 );
 

@@ -22,7 +22,7 @@ import Categories from "./pages/categories/Categories";
 import Orders from "./pages/orders/Orders";
 import CreateOrder from "./pages/orders/CreateOrder";
 import Reports from "./pages/reports/Reports";
-import BarcodeScanner from "./pages/barcode/BarcodeScanner";
+import BarcodeOrderPage from "./pages/barcode/BarcodeOrderPage";
 
 const App: React.FC = () => {
   return (
@@ -79,7 +79,7 @@ const App: React.FC = () => {
                 path="/barcode"
                 element={
                   <PrivateRoute>
-                    <BarcodeScanner />
+                    <BarcodeOrderPage />
                   </PrivateRoute>
                 }
               />
