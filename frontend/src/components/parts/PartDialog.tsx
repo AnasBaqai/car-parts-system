@@ -25,15 +25,25 @@ interface Part {
   name: string;
   description?: string;
   category: string; // Always use string ID for category in the form
-  price: number;
-  quantity: number;
-  minQuantity: number;
+  price: number | string;
+  quantity: number | string;
+  minQuantity: number | string;
   manufacturer?: string;
   partNumber: string;
   barcode?: string;
 }
 
-interface PartFormData extends Omit<Part, "_id"> {}
+export interface PartFormData {
+  name: string;
+  description?: string;
+  category: string | Category;
+  price: number | string;
+  quantity: number | string;
+  minQuantity: number | string;
+  manufacturer?: string;
+  partNumber: string;
+  barcode?: string;
+}
 
 interface PartDialogProps {
   open: boolean;
@@ -108,6 +118,19 @@ const PartDialog: React.FC<PartDialogProps> = ({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
+    // Allow empty values for number fields
+    if (
+      (name === "price" || name === "quantity" || name === "minQuantity") &&
+      value === ""
+    ) {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]:
@@ -119,7 +142,17 @@ const PartDialog: React.FC<PartDialogProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+
+    // Convert any empty string values to 0 before submitting
+    const submissionData = {
+      ...formData,
+      price: formData.price === "" ? 0 : Number(formData.price),
+      quantity: formData.quantity === "" ? 0 : Number(formData.quantity),
+      minQuantity:
+        formData.minQuantity === "" ? 0 : Number(formData.minQuantity),
+    };
+
+    onSubmit(submissionData);
   };
 
   const handleBarcodeDetected = (barcode: string) => {

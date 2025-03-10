@@ -221,7 +221,7 @@ const Orders: React.FC = () => {
         open: true,
         message:
           paymentData.paymentMethod === "CASH"
-            ? `Payment successful. Change to return: $${change.toFixed(2)}`
+            ? `Payment successful. Change to return: £${change.toFixed(2)}`
             : "Card payment processed successfully",
         severity: "success",
       });
@@ -357,7 +357,7 @@ const Orders: React.FC = () => {
                   {order.customerPhone}
                 </TableCell>
                 <TableCell>{order.items.length} items</TableCell>
-                <TableCell>${order.totalAmount.toFixed(2)}</TableCell>
+                <TableCell>£{order.totalAmount.toFixed(2)}</TableCell>
                 <TableCell>
                   {order.paymentMethod ? (
                     <Chip
@@ -424,7 +424,7 @@ const Orders: React.FC = () => {
                 Order Number: {paymentData.orderNumber}
               </Typography>
               <Typography variant="h6" sx={{ mt: 1 }}>
-                Total Amount: ${paymentData.totalAmount.toFixed(2)}
+                Total Amount: £{paymentData.totalAmount.toFixed(2)}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -459,13 +459,13 @@ const Orders: React.FC = () => {
                     }))
                   }
                   InputProps={{
-                    startAdornment: <span>$</span>,
+                    startAdornment: <span>£</span>,
                   }}
                 />
                 {paymentData.cashReceived &&
                   paymentData.cashReceived >= paymentData.totalAmount && (
                     <Typography color="success.main" sx={{ mt: 1 }}>
-                      Change to return: $
+                      Change to return: £
                       {(
                         paymentData.cashReceived - paymentData.totalAmount
                       ).toFixed(2)}

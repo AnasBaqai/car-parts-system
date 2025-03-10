@@ -170,7 +170,7 @@ const Dashboard: React.FC = () => {
                     }}
                   >
                     <Typography>{order.orderNumber}</Typography>
-                    <Typography>${order.totalAmount.toFixed(2)}</Typography>
+                    <Typography>£{order.totalAmount.toFixed(2)}</Typography>
                   </Box>
                 ))
               ) : (
@@ -195,7 +195,7 @@ const Dashboard: React.FC = () => {
               >
                 <Typography>Total Inventory Value:</Typography>
                 <Typography variant="h6">
-                  ${totalInventoryValue.toFixed(2)}
+                  £{totalInventoryValue.toFixed(2)}
                 </Typography>
               </Box>
             </CardContent>

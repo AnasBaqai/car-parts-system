@@ -310,7 +310,7 @@ const BarcodeOrderPage: React.FC = () => {
                         </Typography>
                       )}
                     </TableCell>
-                    <TableCell>${item.part.price.toFixed(2)}</TableCell>
+                    <TableCell>£{item.part.price.toFixed(2)}</TableCell>
                     <TableCell align="center">
                       <Box
                         sx={{
@@ -346,7 +346,7 @@ const BarcodeOrderPage: React.FC = () => {
                       </Box>
                     </TableCell>
                     <TableCell align="right">
-                      ${(item.part.price * item.quantity).toFixed(2)}
+                      £{(item.part.price * item.quantity).toFixed(2)}
                     </TableCell>
                     <TableCell align="right">
                       <IconButton
@@ -366,7 +366,7 @@ const BarcodeOrderPage: React.FC = () => {
                   </TableCell>
                   <TableCell align="right">
                     <Typography variant="h6">
-                      ${totalAmount.toFixed(2)}
+                      £{totalAmount.toFixed(2)}
                     </Typography>
                   </TableCell>
                   <TableCell />
@@ -428,15 +428,15 @@ const BarcodeOrderPage: React.FC = () => {
             {items.map((item) => (
               <tr key={item.part._id}>
                 <td>{item.part.name}</td>
-                <td>${item.part.price.toFixed(2)}</td>
+                <td>£{item.part.price.toFixed(2)}</td>
                 <td>{item.quantity}</td>
-                <td>${(item.part.price * item.quantity).toFixed(2)}</td>
+                <td>£{(item.part.price * item.quantity).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
         </table>
         <div className="total">
-          <p>Total: ${totalAmount.toFixed(2)}</p>
+          <p>Total: £{totalAmount.toFixed(2)}</p>
         </div>
         {customerName && <p>Customer: {customerName}</p>}
         {customerPhone && <p>Phone: {customerPhone}</p>}
@@ -478,7 +478,7 @@ const BarcodeOrderPage: React.FC = () => {
               </Select>
             </FormControl>
             <Typography variant="h6" align="right">
-              Total: ${totalAmount.toFixed(2)}
+              Total: £{totalAmount.toFixed(2)}
             </Typography>
           </Box>
         </DialogContent>

@@ -613,10 +613,10 @@ const CreateOrder: React.FC = () => {
                             </Box>
                           </TableCell>
                           <TableCell align="right">
-                            ${part.price.toFixed(2)}
+                            £{part.price.toFixed(2)}
                           </TableCell>
                           <TableCell align="right">
-                            ${(part.price * part.quantity).toFixed(2)}
+                            £{(part.price * part.quantity).toFixed(2)}
                           </TableCell>
                           <TableCell align="right">
                             <IconButton
@@ -637,7 +637,7 @@ const CreateOrder: React.FC = () => {
                         </TableCell>
                         <TableCell align="right">
                           <Typography variant="h6">
-                            ${calculateTotal().toFixed(2)}
+                            £{calculateTotal().toFixed(2)}
                           </Typography>
                         </TableCell>
                         <TableCell />
@@ -761,7 +761,7 @@ const CreateOrder: React.FC = () => {
                       }}
                     >
                       <TableCell>{part.name}</TableCell>
-                      <TableCell>${part.price.toFixed(2)}</TableCell>
+                      <TableCell>£{part.price.toFixed(2)}</TableCell>
                       <TableCell>
                         <Typography
                           color={part.quantity < 5 ? "error" : "inherit"}

@@ -1,0 +1,177 @@
+[
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c85"
+    },
+    "name": "Engine Components",
+    "description": "Parts related to the engine system"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c86"
+    },
+    "name": "Transmission",
+    "description": "Parts for manual and automatic transmissions"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c87"
+    },
+    "name": "Brake System",
+    "description": "Brake pads, rotors, and other brake components"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c88"
+    },
+    "name": "Suspension",
+    "description": "Shock absorbers, struts, and suspension parts"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c89"
+    },
+    "name": "Electrical System",
+    "description": "Batteries, alternators, and electrical components"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c8a"
+    },
+    "name": "Cooling System",
+    "description": "Radiators, water pumps, and cooling components"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c8b"
+    },
+    "name": "Fuel System",
+    "description": "Fuel pumps, injectors, and fuel-related parts"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c8c"
+    },
+    "name": "Exhaust System",
+    "description": "Mufflers, catalytic converters, and exhaust components"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c8d"
+    },
+    "name": "Steering",
+    "description": "Steering wheels, racks, and steering components"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c8e"
+    },
+    "name": "Filters",
+    "description": "Air filters, oil filters, and other filtration components"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c8f"
+    },
+    "name": "Belts & Hoses",
+    "description": "Drive belts, timing belts, and various hoses"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c90"
+    },
+    "name": "Ignition System",
+    "description": "Spark plugs, ignition coils, and ignition components"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c91"
+    },
+    "name": "Body Parts",
+    "description": "Bumpers, hoods, doors, and other body components"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c92"
+    },
+    "name": "Interior Accessories",
+    "description": "Floor mats, seat covers, and interior accessories"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c93"
+    },
+    "name": "Exterior Accessories",
+    "description": "Roof racks, mud flaps, and exterior accessories"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c94"
+    },
+    "name": "Lighting",
+    "description": "Headlights, taillights, and lighting components"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c95"
+    },
+    "name": "Wheels & Tires",
+    "description": "Rims, wheel covers, and tire-related products"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c96"
+    },
+    "name": "Lubricants & Fluids",
+    "description": "Engine oil, brake fluid, and other automotive fluids"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c97"
+    },
+    "name": "Sensors & Switches",
+    "description": "Various sensors and switches for different systems"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c98"
+    },
+    "name": "Climate Control",
+    "description": "AC compressors, heater cores, and climate control parts"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c99"
+    },
+    "name": "Gaskets & Seals",
+    "description": "Engine gaskets, oil seals, and sealing components"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c9a"
+    },
+    "name": "Bearings & Bushings",
+    "description": "Wheel bearings, control arm bushings, and related parts"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c9b"
+    },
+    "name": "Tools & Equipment",
+    "description": "Specialized automotive tools and equipment"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c9c"
+    },
+    "name": "Performance Parts",
+    "description": "Aftermarket parts designed to enhance vehicle performance"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610c9d"
+    },
+    "name": "Safety Equipment",
+    "description": "First aid kits, warning triangles, and safety gear"
+  }
+]

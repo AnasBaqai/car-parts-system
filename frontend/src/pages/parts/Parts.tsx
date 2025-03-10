@@ -32,6 +32,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import {
   getParts,
+  getLowStockParts,
   createPart,
   updatePart,
   deletePart,
@@ -39,9 +40,12 @@ import {
   Category,
 } from "../../store/slices/partsSlice";
 import { getCategories } from "../../store/slices/categoriesSlice";
-import PartDialog from "../../components/parts/PartDialog";
+import PartDialog, {
+  PartFormData as PartDialogFormData,
+} from "../../components/parts/PartDialog";
 
-type PartFormData = Omit<Part, "_id">;
+// Keep this for backward compatibility but don't use it for the handleSubmit function
+// type PartFormData = Omit<Part, "_id">;
 
 const Parts: React.FC = () => {
   const [search, setSearch] = useState("");
@@ -102,22 +106,44 @@ const Parts: React.FC = () => {
     }
   };
 
-  const handleSubmit = async (formData: PartFormData) => {
-    // Ensure category is a string ID
-    const updatedFormData = {
-      ...formData,
+  const handleSubmit = async (formData: PartDialogFormData) => {
+    // Create a properly typed object for the API
+    const apiData = {
+      name: formData.name,
+      description: formData.description,
       category:
         typeof formData.category === "object" && formData.category !== null
           ? formData.category._id
           : formData.category,
+      price:
+        typeof formData.price === "string"
+          ? formData.price === ""
+            ? 0
+            : Number(formData.price)
+          : formData.price,
+      quantity:
+        typeof formData.quantity === "string"
+          ? formData.quantity === ""
+            ? 0
+            : Number(formData.quantity)
+          : formData.quantity,
+      minQuantity:
+        typeof formData.minQuantity === "string"
+          ? formData.minQuantity === ""
+            ? 0
+            : Number(formData.minQuantity)
+          : formData.minQuantity,
+      manufacturer: formData.manufacturer,
+      partNumber: formData.partNumber,
+      barcode: formData.barcode,
     };
 
     if (selectedPart) {
-      await dispatch(
-        updatePart({ id: selectedPart._id, partData: updatedFormData })
-      );
+      // Access the _id property using bracket notation to avoid TypeScript errors
+      const id = selectedPart["_id"];
+      await dispatch(updatePart({ id, partData: apiData }));
     } else {
-      await dispatch(createPart(updatedFormData));
+      await dispatch(createPart(apiData));
     }
     setOpenDialog(false);
   };
@@ -223,7 +249,7 @@ const Parts: React.FC = () => {
                 <TableCell>{part.name}</TableCell>
                 <TableCell>{getCategoryName(part.category)}</TableCell>
                 <TableCell>{part.manufacturer}</TableCell>
-                <TableCell align="right">${part.price.toFixed(2)}</TableCell>
+                <TableCell align="right">£{part.price.toFixed(2)}</TableCell>
                 <TableCell align="right">{part.quantity}</TableCell>
                 <TableCell>
                   {part.barcode ? (

@@ -1,0 +1,402 @@
+[
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610ca0"
+    },
+    "name": "Oil Filter",
+    "description": "High-quality oil filter for most passenger vehicles",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c8e"
+    },
+    "price": 8.99,
+    "quantity": 150,
+    "minQuantity": 30,
+    "manufacturer": "Bosch",
+    "partNumber": "P123456",
+    "barcode": "7891234567890"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610ca1"
+    },
+    "name": "Air Filter",
+    "description": "Engine air filter for improved air flow",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c8e"
+    },
+    "price": 12.99,
+    "quantity": 120,
+    "minQuantity": 25,
+    "manufacturer": "K&N",
+    "partNumber": "P234567",
+    "barcode": "7891234567891"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610ca2"
+    },
+    "name": "Brake Pads (Front)",
+    "description": "Ceramic front brake pads for most sedans",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c87"
+    },
+    "price": 35.99,
+    "quantity": 80,
+    "minQuantity": 20,
+    "manufacturer": "Brembo",
+    "partNumber": "P345678",
+    "barcode": "7891234567892"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610ca3"
+    },
+    "name": "Brake Rotors (Front)",
+    "description": "Pair of front brake rotors",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c87"
+    },
+    "price": 65.99,
+    "quantity": 60,
+    "minQuantity": 15,
+    "manufacturer": "Brembo",
+    "partNumber": "P456789",
+    "barcode": "7891234567893"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610ca4"
+    },
+    "name": "Spark Plugs (Set of 4)",
+    "description": "Iridium spark plugs for improved performance",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c90"
+    },
+    "price": 28.99,
+    "quantity": 100,
+    "minQuantity": 20,
+    "manufacturer": "NGK",
+    "partNumber": "P567890",
+    "barcode": "7891234567894"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610ca5"
+    },
+    "name": "Battery",
+    "description": "12V automotive battery with 600 CCA",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c89"
+    },
+    "price": 89.99,
+    "quantity": 40,
+    "minQuantity": 10,
+    "manufacturer": "Optima",
+    "partNumber": "P678901",
+    "barcode": "7891234567895"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610ca6"
+    },
+    "name": "Alternator",
+    "description": "Remanufactured alternator for most vehicles",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c89"
+    },
+    "price": 129.99,
+    "quantity": 25,
+    "minQuantity": 5,
+    "manufacturer": "Denso",
+    "partNumber": "P789012",
+    "barcode": "7891234567896"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610ca7"
+    },
+    "name": "Radiator",
+    "description": "Aluminum radiator for efficient cooling",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c8a"
+    },
+    "price": 119.99,
+    "quantity": 30,
+    "minQuantity": 8,
+    "manufacturer": "Mishimoto",
+    "partNumber": "P890123",
+    "barcode": "7891234567897"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610ca8"
+    },
+    "name": "Water Pump",
+    "description": "Engine water pump with metal impeller",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c8a"
+    },
+    "price": 49.99,
+    "quantity": 45,
+    "minQuantity": 10,
+    "manufacturer": "Gates",
+    "partNumber": "P901234",
+    "barcode": "7891234567898"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610ca9"
+    },
+    "name": "Fuel Pump",
+    "description": "Electric fuel pump for most vehicles",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c8b"
+    },
+    "price": 79.99,
+    "quantity": 35,
+    "minQuantity": 8,
+    "manufacturer": "Walbro",
+    "partNumber": "P012345",
+    "barcode": "7891234567899"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610caa"
+    },
+    "name": "Shock Absorber (Front)",
+    "description": "Front shock absorber for improved handling",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c88"
+    },
+    "price": 59.99,
+    "quantity": 40,
+    "minQuantity": 10,
+    "manufacturer": "Bilstein",
+    "partNumber": "P123457",
+    "barcode": "7891234567900"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610cab"
+    },
+    "name": "Timing Belt Kit",
+    "description": "Complete timing belt kit with water pump",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c8f"
+    },
+    "price": 89.99,
+    "quantity": 30,
+    "minQuantity": 8,
+    "manufacturer": "Gates",
+    "partNumber": "P234568",
+    "barcode": "7891234567901"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610cac"
+    },
+    "name": "Serpentine Belt",
+    "description": "Serpentine belt for accessory drive",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c8f"
+    },
+    "price": 19.99,
+    "quantity": 70,
+    "minQuantity": 15,
+    "manufacturer": "Continental",
+    "partNumber": "P345679",
+    "barcode": "7891234567902"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610cad"
+    },
+    "name": "Headlight Assembly (Driver Side)",
+    "description": "Driver side headlight assembly with bulbs",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c94"
+    },
+    "price": 129.99,
+    "quantity": 20,
+    "minQuantity": 5,
+    "manufacturer": "TYC",
+    "partNumber": "P456790",
+    "barcode": "7891234567903"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610cae"
+    },
+    "name": "Oxygen Sensor",
+    "description": "Upstream oxygen sensor for emission control",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c97"
+    },
+    "price": 49.99,
+    "quantity": 50,
+    "minQuantity": 12,
+    "manufacturer": "Denso",
+    "partNumber": "P567891",
+    "barcode": "7891234567904"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610caf"
+    },
+    "name": "Wheel Bearing (Front)",
+    "description": "Front wheel bearing assembly",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c9a"
+    },
+    "price": 45.99,
+    "quantity": 40,
+    "minQuantity": 10,
+    "manufacturer": "Timken",
+    "partNumber": "P678902",
+    "barcode": "7891234567905"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610cb0"
+    },
+    "name": "AC Compressor",
+    "description": "Air conditioning compressor with clutch",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c98"
+    },
+    "price": 189.99,
+    "quantity": 15,
+    "minQuantity": 5,
+    "manufacturer": "Denso",
+    "partNumber": "P789013",
+    "barcode": "7891234567906"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610cb1"
+    },
+    "name": "Power Steering Pump",
+    "description": "Remanufactured power steering pump",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c8d"
+    },
+    "price": 109.99,
+    "quantity": 25,
+    "minQuantity": 6,
+    "manufacturer": "A1 Cardone",
+    "partNumber": "P890124",
+    "barcode": "7891234567907"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610cb2"
+    },
+    "name": "Catalytic Converter",
+    "description": "Universal catalytic converter",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c8c"
+    },
+    "price": 159.99,
+    "quantity": 20,
+    "minQuantity": 5,
+    "manufacturer": "Walker",
+    "partNumber": "P901235",
+    "barcode": "7891234567908"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610cb3"
+    },
+    "name": "Transmission Filter Kit",
+    "description": "Automatic transmission filter and gasket kit",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c86"
+    },
+    "price": 29.99,
+    "quantity": 60,
+    "minQuantity": 15,
+    "manufacturer": "ATP",
+    "partNumber": "P012346",
+    "barcode": "7891234567909"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610cb4"
+    },
+    "name": "Engine Oil (5W-30, 5qt)",
+    "description": "Synthetic blend engine oil, 5 quart container",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c96"
+    },
+    "price": 24.99,
+    "quantity": 100,
+    "minQuantity": 25,
+    "manufacturer": "Mobil",
+    "partNumber": "P123458",
+    "barcode": "7891234567910"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610cb5"
+    },
+    "name": "Brake Fluid (DOT 4, 32oz)",
+    "description": "DOT 4 brake fluid, 32 ounce bottle",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c96"
+    },
+    "price": 8.99,
+    "quantity": 80,
+    "minQuantity": 20,
+    "manufacturer": "Prestone",
+    "partNumber": "P234569",
+    "barcode": "7891234567911"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610cb6"
+    },
+    "name": "Windshield Wipers (Pair)",
+    "description": "All-season windshield wiper blades, pair",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c93"
+    },
+    "price": 29.99,
+    "quantity": 70,
+    "minQuantity": 15,
+    "manufacturer": "Bosch",
+    "partNumber": "P345680",
+    "barcode": "7891234567912"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610cb7"
+    },
+    "name": "Floor Mats (Set of 4)",
+    "description": "All-weather floor mats, set of 4",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c92"
+    },
+    "price": 49.99,
+    "quantity": 40,
+    "minQuantity": 10,
+    "manufacturer": "WeatherTech",
+    "partNumber": "P456791",
+    "barcode": "7891234567913"
+  },
+  {
+    "_id": {
+      "$oid": "60d21b4667d0d8992e610cb8"
+    },
+    "name": "Valve Cover Gasket",
+    "description": "Engine valve cover gasket",
+    "category": {
+      "$oid": "60d21b4667d0d8992e610c99"
+    },
+    "price": 19.99,
+    "quantity": 50,
+    "minQuantity": 12,
+    "manufacturer": "Fel-Pro",
+    "partNumber": "P567892",
+    "barcode": "7891234567914"
+  }
+]
