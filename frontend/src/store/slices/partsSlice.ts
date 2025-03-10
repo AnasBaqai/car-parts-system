@@ -10,12 +10,12 @@ export interface Category {
 export interface Part {
   _id: string;
   name: string;
-  description: string;
+  description?: string;
   category: string | Category; // Can be either a string ID or a populated Category object
   price: number;
   quantity: number;
   minQuantity: number;
-  manufacturer: string;
+  manufacturer?: string;
   partNumber: string;
   barcode?: string;
 }

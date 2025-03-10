@@ -13,6 +13,11 @@ import {
   Toolbar,
   Typography,
   useTheme,
+  Avatar,
+  Tooltip,
+  Menu,
+  MenuItem,
+  Divider,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -22,18 +27,22 @@ import {
   ShoppingCart as OrderIcon,
   Assessment as ReportIcon,
   Logout as LogoutIcon,
+  Settings as SettingsIcon,
+  Person as PersonIcon,
 } from "@mui/icons-material";
-import { useAppDispatch } from "../hooks/redux";
+import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { logout } from "../store/slices/authSlice";
 
 const drawerWidth = 240;
 
 const Layout: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
+  const { user } = useAppSelector((state) => state.auth);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -44,12 +53,26 @@ const Layout: React.FC = () => {
     navigate("/login");
   };
 
+  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
+  };
+
+  const handleSettingsClick = () => {
+    handleCloseUserMenu();
+    navigate("/settings");
+  };
+
   const menuItems = [
     { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
     { text: "Parts", icon: <BuildIcon />, path: "/parts" },
     { text: "Categories", icon: <CategoryIcon />, path: "/categories" },
     { text: "Orders", icon: <OrderIcon />, path: "/orders" },
     { text: "Reports", icon: <ReportIcon />, path: "/reports" },
+    { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
   ];
 
   const drawer = (
@@ -100,10 +123,61 @@ const Layout: React.FC = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             {menuItems.find((item) => item.path === location.pathname)?.text ||
               "Car Parts System"}
           </Typography>
+
+          {/* User profile section */}
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar sx={{ bgcolor: "primary.dark" }}>
+                  {user?.username ? (
+                    user.username.charAt(0).toUpperCase()
+                  ) : (
+                    <PersonIcon />
+                  )}
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: "45px" }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              <Box sx={{ px: 2, py: 1 }}>
+                <Typography variant="subtitle1">{user?.username}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {user?.email}
+                </Typography>
+              </Box>
+              <Divider />
+              <MenuItem onClick={handleSettingsClick}>
+                <ListItemIcon>
+                  <SettingsIcon fontSize="small" />
+                </ListItemIcon>
+                <Typography textAlign="center">Settings</Typography>
+              </MenuItem>
+              <MenuItem onClick={handleLogout}>
+                <ListItemIcon>
+                  <LogoutIcon fontSize="small" />
+                </ListItemIcon>
+                <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
+            </Menu>
+          </Box>
         </Toolbar>
       </AppBar>
       <Box

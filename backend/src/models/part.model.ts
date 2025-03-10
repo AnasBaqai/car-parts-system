@@ -2,14 +2,14 @@ import mongoose, { Document, Schema } from "mongoose";
 
 export interface IPart extends Document {
   name: string;
-  description: string;
+  description?: string;
   category: mongoose.Types.ObjectId;
   price: number;
   quantity: number;
   minQuantity: number;
-  manufacturer: string;
+  manufacturer?: string;
   partNumber: string;
-  barcode: string;
+  barcode?: string;
 }
 
 const partSchema = new Schema(
@@ -20,7 +20,7 @@ const partSchema = new Schema(
     },
     description: {
       type: String,
-      required: true,
+      required: false,
     },
     category: {
       type: Schema.Types.ObjectId,
@@ -45,7 +45,7 @@ const partSchema = new Schema(
     },
     manufacturer: {
       type: String,
-      required: true,
+      required: false,
     },
     partNumber: {
       type: String,

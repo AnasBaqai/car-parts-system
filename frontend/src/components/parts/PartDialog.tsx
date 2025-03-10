@@ -12,27 +12,23 @@ import {
   Tooltip,
   Box,
   Typography,
-  Divider,
-  Tabs,
-  Tab,
 } from "@mui/material";
 import QrCodeScannerIcon from "@mui/icons-material/QrCodeScanner";
 import CreateIcon from "@mui/icons-material/Create";
 import { useAppSelector } from "../../hooks/redux";
 import BarcodeScanner from "../BarcodeScanner";
-import BarcodeGenerator from "../BarcodeGenerator";
 import { Part as PartType, Category } from "../../store/slices/partsSlice";
 
 // Define a simplified Part type for the form that only uses string for category
 interface Part {
   _id: string;
   name: string;
-  description: string;
+  description?: string;
   category: string; // Always use string ID for category in the form
   price: number;
   quantity: number;
   minQuantity: number;
-  manufacturer: string;
+  manufacturer?: string;
   partNumber: string;
   barcode?: string;
 }
@@ -45,28 +41,6 @@ interface PartDialogProps {
   onSubmit: (part: PartFormData) => void;
   initialData?: PartType | null;
   title: string;
-}
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`barcode-tabpanel-${index}`}
-      aria-labelledby={`barcode-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ pt: 2 }}>{children}</Box>}
-    </div>
-  );
 }
 
 const PartDialog: React.FC<PartDialogProps> = ({
@@ -88,7 +62,6 @@ const PartDialog: React.FC<PartDialogProps> = ({
     barcode: "",
   });
   const [showBarcodeTools, setShowBarcodeTools] = useState(false);
-  const [tabValue, setTabValue] = useState(0);
 
   const { categories } = useAppSelector((state) => state.categories);
 
@@ -103,16 +76,21 @@ const PartDialog: React.FC<PartDialogProps> = ({
 
       setFormData({
         name: initialData.name,
-        description: initialData.description,
+        description: initialData.description || "",
         category: categoryId,
         price: initialData.price,
         quantity: initialData.quantity,
         minQuantity: initialData.minQuantity,
-        manufacturer: initialData.manufacturer,
+        manufacturer: initialData.manufacturer || "",
         partNumber: initialData.partNumber,
         barcode: initialData.barcode || "",
       });
     } else {
+      // Generate a random part number for new parts
+      const randomPartNumber = `P${Math.floor(Math.random() * 1000000)
+        .toString()
+        .padStart(6, "0")}`;
+
       setFormData({
         name: "",
         description: "",
@@ -121,12 +99,11 @@ const PartDialog: React.FC<PartDialogProps> = ({
         quantity: 0,
         minQuantity: 5,
         manufacturer: "",
-        partNumber: "",
+        partNumber: randomPartNumber,
         barcode: "",
       });
     }
     setShowBarcodeTools(false);
-    setTabValue(0);
   }, [initialData, open]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,10 +130,6 @@ const PartDialog: React.FC<PartDialogProps> = ({
     setShowBarcodeTools(false);
   };
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
-
   const handleDialogClose = () => {
     setShowBarcodeTools(false);
     onClose();
@@ -169,28 +142,13 @@ const PartDialog: React.FC<PartDialogProps> = ({
         <DialogContent>
           {showBarcodeTools ? (
             <Box sx={{ width: "100%" }}>
-              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <Tabs
-                  value={tabValue}
-                  onChange={handleTabChange}
-                  aria-label="barcode tabs"
-                >
-                  <Tab label="Scan Barcode" />
-                  <Tab label="Generate Test Barcode" />
-                </Tabs>
-              </Box>
-              <TabPanel value={tabValue} index={0}>
-                <BarcodeScanner
-                  onDetected={handleBarcodeDetected}
-                  onClose={() => setShowBarcodeTools(false)}
-                />
-              </TabPanel>
-              <TabPanel value={tabValue} index={1}>
-                <BarcodeGenerator
-                  onGenerate={handleBarcodeDetected}
-                  onClose={() => setShowBarcodeTools(false)}
-                />
-              </TabPanel>
+              <Typography variant="h6" gutterBottom>
+                Scan Barcode
+              </Typography>
+              <BarcodeScanner
+                onDetected={handleBarcodeDetected}
+                onClose={() => setShowBarcodeTools(false)}
+              />
             </Box>
           ) : (
             <Grid container spacing={2} sx={{ mt: 1 }}>
@@ -232,7 +190,6 @@ const PartDialog: React.FC<PartDialogProps> = ({
                   fullWidth
                   multiline
                   rows={3}
-                  required
                   value={formData.description}
                   onChange={handleChange}
                 />
@@ -295,19 +252,20 @@ const PartDialog: React.FC<PartDialogProps> = ({
                   name="manufacturer"
                   label="Manufacturer"
                   fullWidth
-                  required
                   value={formData.manufacturer}
                   onChange={handleChange}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
                 <TextField
                   name="partNumber"
                   label="Part Number"
                   fullWidth
-                  required
                   value={formData.partNumber}
-                  onChange={handleChange}
+                  disabled
+                  InputProps={{
+                    readOnly: true,
+                  }}
                 />
               </Grid>
             </Grid>

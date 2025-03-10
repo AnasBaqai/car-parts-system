@@ -22,6 +22,7 @@ import Categories from "./pages/categories/Categories";
 import Orders from "./pages/orders/Orders";
 import CreateOrder from "./pages/orders/CreateOrder";
 import Reports from "./pages/reports/Reports";
+import Settings from "./pages/settings/Settings";
 
 const App: React.FC = () => {
   return (
@@ -79,6 +80,14 @@ const App: React.FC = () => {
                 element={
                   <PrivateRoute>
                     <Reports />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <PrivateRoute>
+                    <Settings />
                   </PrivateRoute>
                 }
               />

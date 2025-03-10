@@ -21,6 +21,7 @@ import {
   DialogContent,
   DialogActions,
   Tooltip,
+  TablePagination,
 } from "@mui/material";
 import {
   Add as AddIcon,
@@ -48,6 +49,8 @@ const Parts: React.FC = () => {
   const [selectedPart, setSelectedPart] = useState<Part | null>(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [partToDelete, setPartToDelete] = useState<Part | null>(null);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const dispatch = useAppDispatch();
   const { parts, loading } = useAppSelector((state) => state.parts);
@@ -119,13 +122,29 @@ const Parts: React.FC = () => {
     setOpenDialog(false);
   };
 
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   const filteredParts = parts.filter(
     (part) =>
       part.name.toLowerCase().includes(search.toLowerCase()) ||
-      part.partNumber.toLowerCase().includes(search.toLowerCase()) ||
-      part.manufacturer.toLowerCase().includes(search.toLowerCase()) ||
+      part.manufacturer?.toLowerCase().includes(search.toLowerCase()) ||
       (part.barcode &&
         part.barcode.toLowerCase().includes(search.toLowerCase()))
+  );
+
+  // Apply pagination to filtered parts
+  const paginatedParts = filteredParts.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
   );
 
   const getCategoryName = (category: string | Category): string => {
@@ -179,7 +198,7 @@ const Parts: React.FC = () => {
             label="Search parts"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search by name, part number, barcode, or manufacturer"
+            placeholder="Search by name, manufacturer, or barcode"
           />
         </CardContent>
       </Card>
@@ -188,7 +207,6 @@ const Parts: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Part Number</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Category</TableCell>
               <TableCell>Manufacturer</TableCell>
@@ -200,9 +218,8 @@ const Parts: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredParts.map((part) => (
+            {paginatedParts.map((part) => (
               <TableRow key={part._id}>
-                <TableCell>{part.partNumber}</TableCell>
                 <TableCell>{part.name}</TableCell>
                 <TableCell>{getCategoryName(part.category)}</TableCell>
                 <TableCell>{part.manufacturer}</TableCell>
@@ -261,6 +278,15 @@ const Parts: React.FC = () => {
             ))}
           </TableBody>
         </Table>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={filteredParts.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </TableContainer>
 
       <PartDialog
