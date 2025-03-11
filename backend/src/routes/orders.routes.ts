@@ -5,6 +5,7 @@ import {
   createOrder,
   updateOrderStatus,
   getSalesReport,
+  generateOrderReceipt,
 } from "../controllers/orders.controller";
 import { protect } from "../middleware/auth.middleware";
 
@@ -17,6 +18,7 @@ router.get("/", getOrders);
 router.post("/", createOrder);
 router.get("/report", getSalesReport);
 router.get("/:id", getOrder);
+router.get("/:id/receipt", generateOrderReceipt);
 router.put("/:id", updateOrderStatus);
 
 export default router;

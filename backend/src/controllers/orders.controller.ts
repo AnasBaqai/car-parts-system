@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Order, { IOrder } from "../models/order.model";
 import Part from "../models/part.model";
+import { generateReceipt } from "../utils/receiptGenerator";
 
 // Get all orders
 export const getOrders = async (req: Request, res: Response): Promise<void> => {
@@ -233,5 +234,57 @@ export const getSalesReport = async (
       message: "Server error",
       error: error instanceof Error ? error.message : "Unknown error",
     });
+  }
+};
+
+// Generate receipt for an order
+export const generateOrderReceipt = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    console.log("Generating receipt for order:", { orderId: req.params.id });
+
+    const order = await Order.findById(req.params.id).populate({
+      path: "items.part",
+      populate: { path: "category" },
+    });
+
+    if (!order) {
+      console.log("Order not found:", { orderId: req.params.id });
+      res.status(404).json({ message: "No order found with that ID" });
+      return;
+    }
+
+    console.log("Found order data:", {
+      orderNumber: order.orderNumber,
+      items: order.items.length,
+      totalAmount: order.totalAmount,
+    });
+
+    try {
+      const receipt = generateReceipt(order);
+      console.log("Receipt generated successfully");
+
+      res.status(200).json({
+        status: "success",
+        data: {
+          receipt,
+        },
+      });
+    } catch (receiptError) {
+      console.error("Receipt generation failed:", {
+        error:
+          receiptError instanceof Error ? receiptError.message : receiptError,
+        orderData: order,
+      });
+      res.status(500).json({ message: "Failed to generate receipt" });
+    }
+  } catch (error) {
+    console.error("Error in generateOrderReceipt:", {
+      error: error instanceof Error ? error.message : error,
+      orderId: req.params.id,
+    });
+    res.status(500).json({ message: "Server error" });
   }
 };

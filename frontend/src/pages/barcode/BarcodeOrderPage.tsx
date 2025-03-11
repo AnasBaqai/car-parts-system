@@ -26,10 +26,12 @@ import {
   CircularProgress,
   Divider,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
-import PrintIcon from "@mui/icons-material/Print";
+import {
+  Delete as DeleteIcon,
+  Add as AddIcon,
+  Remove as RemoveIcon,
+  Print as PrintIcon,
+} from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import {
   getPartByBarcode,
@@ -41,6 +43,7 @@ import {
 } from "../../store/slices/barcodeSlice";
 import BarcodeOrderScanner from "../../components/BarcodeOrderScanner";
 import { formatCurrency } from "../../utils/formatters";
+import receiptService from "../../services/receiptService";
 
 const BarcodeOrderPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -62,6 +65,9 @@ const BarcodeOrderPage: React.FC = () => {
     severity: "info",
   });
   const barcodeInputRef = useRef<HTMLInputElement>(null);
+  const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
+  const [printingReceipt, setPrintingReceipt] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Focus on barcode input when component mounts
   useEffect(() => {
@@ -135,13 +141,15 @@ const BarcodeOrderPage: React.FC = () => {
   // Handle order creation
   const handleCreateOrder = async () => {
     try {
+      setIsLoading(true);
+
       const orderItems = items.map((item) => ({
         part: item.part._id,
         quantity: item.quantity,
         price: item.part.price,
       }));
 
-      await dispatch(
+      const result = await dispatch(
         createBarcodeOrder({
           items: orderItems,
           totalAmount,
@@ -151,59 +159,58 @@ const BarcodeOrderPage: React.FC = () => {
         })
       ).unwrap();
 
+      setCreatedOrderId(result._id);
+
       setAlertInfo({
         open: true,
         message: "Order created successfully!",
         severity: "success",
       });
 
-      setOpenCheckout(false);
+      dispatch(clearItems());
       setCustomerName("");
       setCustomerPhone("");
       setPaymentMethod("CASH");
-    } catch (error: any) {
+    } catch (error) {
+      console.error("Error creating order:", error);
       setAlertInfo({
         open: true,
-        message: error.message || "Failed to create order",
+        message: "Failed to create order. Please try again.",
         severity: "error",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Handle print receipt
-  const handlePrintReceipt = () => {
-    const receiptContent = document.getElementById("receipt-content");
-    if (receiptContent) {
-      const printWindow = window.open("", "_blank");
-      if (printWindow) {
-        printWindow.document.write(`
-          <html>
-            <head>
-              <title>Receipt</title>
-              <style>
-                body { font-family: Arial, sans-serif; }
-                .receipt { padding: 20px; }
-                .header { text-align: center; margin-bottom: 20px; }
-                .items { width: 100%; border-collapse: collapse; }
-                .items th, .items td { border-bottom: 1px solid #ddd; padding: 8px; text-align: left; }
-                .total { margin-top: 20px; text-align: right; font-weight: bold; }
-                .footer { margin-top: 30px; text-align: center; font-size: 12px; }
-              </style>
-            </head>
-            <body>
-              <div class="receipt">
-                ${receiptContent.innerHTML}
-                <div class="footer">
-                  <p>Thank you for your purchase!</p>
-                  <p>Date: ${new Date().toLocaleString()}</p>
-                </div>
-              </div>
-            </body>
-          </html>
-        `);
-        printWindow.document.close();
-        printWindow.print();
-      }
+  // Add a handler for printing receipts
+  const handlePrintReceipt = async () => {
+    if (!createdOrderId) {
+      setAlertInfo({
+        open: true,
+        message: "No order has been created yet",
+        severity: "error",
+      });
+      return;
+    }
+
+    try {
+      setPrintingReceipt(true);
+      await receiptService.printReceipt(createdOrderId);
+      setAlertInfo({
+        open: true,
+        message: "Receipt printed successfully",
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Error printing receipt:", error);
+      setAlertInfo({
+        open: true,
+        message: "Failed to print receipt. Please try again.",
+        severity: "error",
+      });
+    } finally {
+      setPrintingReceipt(false);
     }
   };
 
@@ -489,9 +496,9 @@ const BarcodeOrderPage: React.FC = () => {
             onClick={handleCreateOrder}
             variant="contained"
             color="primary"
-            disabled={loading}
+            disabled={isLoading}
           >
-            {loading ? <CircularProgress size={24} /> : "Complete Order"}
+            {isLoading ? <CircularProgress size={24} /> : "Complete Order"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -510,6 +517,20 @@ const BarcodeOrderPage: React.FC = () => {
           {alertInfo.message}
         </Alert>
       </Snackbar>
+
+      {/* Add a print receipt button after the order is created */}
+      {createdOrderId && (
+        <Button
+          variant="outlined"
+          color="primary"
+          startIcon={<PrintIcon />}
+          onClick={handlePrintReceipt}
+          disabled={printingReceipt}
+          sx={{ mt: 2, mr: 2 }}
+        >
+          Print Receipt
+        </Button>
+      )}
     </Box>
   );
 };

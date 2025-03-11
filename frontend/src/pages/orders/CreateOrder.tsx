@@ -36,6 +36,9 @@ import {
   ShoppingCart as CartIcon,
   Search as SearchIcon,
   QrCodeScanner as ScannerIcon,
+  Print as PrintIcon,
+  ViewList as ViewListIcon,
+  Add as AddIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
@@ -47,6 +50,7 @@ import {
 } from "../../store/slices/ordersSlice";
 import BarcodeOrderScanner from "../../components/BarcodeOrderScanner";
 import { formatCurrency } from "../../utils/formatters";
+import receiptService from "../../services/receiptService";
 
 interface Category {
   _id: string;
@@ -118,6 +122,8 @@ const CreateOrder: React.FC = () => {
   });
   const [tabValue, setTabValue] = useState(0);
   const [barcodeInput, setBarcodeInput] = useState("");
+  const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
+  const [printingReceipt, setPrintingReceipt] = useState(false);
 
   const { categories, loading: categoriesLoading } = useAppSelector(
     (state) => state.categories
@@ -276,13 +282,13 @@ const CreateOrder: React.FC = () => {
         customerPhone: customerPhone || undefined,
       };
 
-      await dispatch(createOrder(orderData)).unwrap();
+      const result = await dispatch(createOrder(orderData)).unwrap();
+      setCreatedOrderId(result._id);
       setAlertInfo({
         open: true,
-        message: "Order created successfully",
+        message: "Order created successfully. You can now print the receipt.",
         severity: "success",
       });
-      navigate("/orders");
     } catch (error: any) {
       setAlertInfo({
         open: true,
@@ -413,6 +419,48 @@ const CreateOrder: React.FC = () => {
         part._id === partId ? { ...part, quantity: newQuantity } : part
       )
     );
+  };
+
+  // Add a handler for printing receipts
+  const handlePrintReceipt = async () => {
+    if (!createdOrderId) {
+      setAlertInfo({
+        open: true,
+        message: "No order has been created yet",
+        severity: "error",
+      });
+      return;
+    }
+
+    try {
+      setPrintingReceipt(true);
+      await receiptService.printReceipt(createdOrderId);
+      setAlertInfo({
+        open: true,
+        message: "Receipt printed successfully",
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Error printing receipt:", error);
+      setAlertInfo({
+        open: true,
+        message: "Failed to print receipt. Please try again.",
+        severity: "error",
+      });
+    } finally {
+      setPrintingReceipt(false);
+    }
+  };
+
+  // Function to reset the form for a new order
+  const resetForm = () => {
+    setSelectedParts([]);
+    setCustomerName("");
+    setCustomerPhone("");
+    setSelectedCategory(null);
+    setBarcodeInput("");
+    setCreatedOrderId(null);
+    setTabValue(0);
   };
 
   if (categoriesLoading || partsLoading) {
@@ -697,13 +745,42 @@ const CreateOrder: React.FC = () => {
 
         {/* Submit Button */}
         <Grid item xs={12}>
-          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
+            {createdOrderId && (
+              <>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  startIcon={<AddIcon />}
+                  onClick={resetForm}
+                >
+                  Create New Order
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  startIcon={<ViewListIcon />}
+                  onClick={() => navigate("/orders")}
+                >
+                  View Orders
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  startIcon={<PrintIcon />}
+                  onClick={handlePrintReceipt}
+                  disabled={printingReceipt}
+                >
+                  {printingReceipt ? "Printing..." : "Print Receipt"}
+                </Button>
+              </>
+            )}
             <Button
               variant="contained"
               size="large"
               startIcon={<CartIcon />}
               onClick={handleSubmit}
-              disabled={selectedParts.length === 0}
+              disabled={selectedParts.length === 0 || !!createdOrderId}
             >
               Create Order
             </Button>

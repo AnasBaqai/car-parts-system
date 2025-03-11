@@ -27,12 +27,20 @@ import {
   TablePagination,
   Tooltip,
 } from "@mui/material";
-import { Add as AddIcon, Delete as DeleteIcon } from "@mui/icons-material";
+import {
+  Add as AddIcon,
+  Delete as DeleteIcon,
+  Print as PrintIcon,
+  Payment as PaymentIcon,
+  CheckCircle as CheckCircleIcon,
+  Cancel as CancelIcon,
+} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { getOrders, updateOrderStatus } from "../../store/slices/ordersSlice";
 import { format } from "date-fns";
 import { formatCurrency } from "../../utils/formatters";
+import receiptService from "../../services/receiptService";
 
 interface OrderItem {
   part: string;
@@ -80,6 +88,7 @@ const Orders: React.FC = () => {
   });
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [printingReceipt, setPrintingReceipt] = useState(false);
 
   const dispatch = useAppDispatch();
   const { orders, loading } = useAppSelector((state) => state.orders);
@@ -243,6 +252,27 @@ const Orders: React.FC = () => {
       : "Payment successful";
   };
 
+  const handlePrintReceipt = async (orderId: string) => {
+    try {
+      setPrintingReceipt(true);
+      await receiptService.printReceipt(orderId);
+      setAlertInfo({
+        open: true,
+        message: "Receipt printed successfully",
+        severity: "success",
+      });
+    } catch (error) {
+      console.error("Error printing receipt:", error);
+      setAlertInfo({
+        open: true,
+        message: "Failed to print receipt. Please try again.",
+        severity: "error",
+      });
+    } finally {
+      setPrintingReceipt(false);
+    }
+  };
+
   if (loading && orders.length === 0) {
     return (
       <Box
@@ -339,27 +369,29 @@ const Orders: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell>Order Number</TableCell>
               <TableCell>Date</TableCell>
               <TableCell>Customer</TableCell>
               <TableCell>Items</TableCell>
-              <TableCell>Total Amount</TableCell>
-              <TableCell>Payment Status</TableCell>
-              <TableCell>Order Status</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>Total</TableCell>
+              <TableCell>Payment</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Print</TableCell>
+              <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {paginatedOrders.map((order) => (
               <TableRow key={order._id}>
+                <TableCell>{order.orderNumber}</TableCell>
+                <TableCell>{formatDate(order.createdAt)}</TableCell>
                 <TableCell>
-                  <Tooltip title={order.orderNumber}>
-                    <span>{formatDate(order.createdAt)}</span>
-                  </Tooltip>
-                </TableCell>
-                <TableCell>
-                  {order.customerName || "N/A"}
-                  {order.customerPhone && <br />}
-                  {order.customerPhone}
+                  {order.customerName || "Walk-in Customer"}
+                  {order.customerPhone && (
+                    <Typography variant="caption" display="block">
+                      {order.customerPhone}
+                    </Typography>
+                  )}
                 </TableCell>
                 <TableCell>{order.items.length} items</TableCell>
                 <TableCell>{formatCurrency(order.totalAmount)}</TableCell>
@@ -367,11 +399,13 @@ const Orders: React.FC = () => {
                   {order.paymentMethod ? (
                     <Chip
                       label={order.paymentMethod}
-                      color="success"
+                      color={
+                        order.paymentMethod === "CASH" ? "success" : "info"
+                      }
                       size="small"
                     />
                   ) : (
-                    <Chip label="UNPAID" color="error" size="small" />
+                    <Chip label="Not Set" size="small" />
                   )}
                 </TableCell>
                 <TableCell>
@@ -382,24 +416,36 @@ const Orders: React.FC = () => {
                   />
                 </TableCell>
                 <TableCell>
-                  {!order.paymentMethod && order.status === "PENDING" && (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="small"
-                      onClick={() => handlePaymentClick(order)}
-                    >
-                      Process Payment
-                    </Button>
-                  )}
-                  {order.status === "PENDING" && (
+                  <Tooltip title="Print Receipt">
                     <IconButton
-                      color="error"
-                      onClick={() => handleStatusChange(order._id, "CANCELLED")}
+                      color="primary"
+                      onClick={() => handlePrintReceipt(order._id)}
+                      disabled={printingReceipt}
                       size="small"
                     >
-                      <DeleteIcon />
+                      <PrintIcon />
                     </IconButton>
+                  </Tooltip>
+                </TableCell>
+                <TableCell>
+                  {order.status === "PENDING" ? (
+                    <Tooltip title="Process Payment">
+                      <IconButton
+                        color="primary"
+                        onClick={() => handlePaymentClick(order)}
+                        size="small"
+                      >
+                        <PaymentIcon />
+                      </IconButton>
+                    </Tooltip>
+                  ) : order.status === "COMPLETED" ? (
+                    <Tooltip title="Completed">
+                      <CheckCircleIcon color="success" />
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title="Cancelled">
+                      <CancelIcon color="error" />
+                    </Tooltip>
                   )}
                 </TableCell>
               </TableRow>
