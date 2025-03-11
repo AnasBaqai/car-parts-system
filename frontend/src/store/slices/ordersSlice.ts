@@ -39,6 +39,7 @@ interface OrdersState {
       CASH: number;
       CARD: number;
     };
+    orders: Order[];
   } | null;
 }
 

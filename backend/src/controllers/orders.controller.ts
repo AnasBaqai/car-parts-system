@@ -201,10 +201,12 @@ export const getSalesReport = async (
       };
     }
 
-    const orders = await Order.find(query).populate({
-      path: "items.part",
-      populate: { path: "category" },
-    });
+    const orders = await Order.find(query)
+      .populate({
+        path: "items.part",
+        populate: { path: "category" },
+      })
+      .sort({ createdAt: 1 }); // Sort by date ascending
 
     const totalSales = orders.reduce(
       (acc, order) => acc + order.totalAmount,
@@ -226,6 +228,10 @@ export const getSalesReport = async (
       salesByPaymentMethod,
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    console.error("Error fetching sales report:", error);
+    res.status(500).json({
+      message: "Server error",
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
   }
 };

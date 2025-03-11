@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { getParts, getLowStockParts } from "../store/slices/partsSlice";
 import { getCategories } from "../store/slices/categoriesSlice";
 import { getOrders } from "../store/slices/ordersSlice";
+import { formatCurrency } from "../utils/formatters";
 
 const Dashboard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -170,7 +171,7 @@ const Dashboard: React.FC = () => {
                     }}
                   >
                     <Typography>{order.orderNumber}</Typography>
-                    <Typography>£{order.totalAmount.toFixed(2)}</Typography>
+                    <Typography>{formatCurrency(order.totalAmount)}</Typography>
                   </Box>
                 ))
               ) : (
@@ -195,7 +196,7 @@ const Dashboard: React.FC = () => {
               >
                 <Typography>Total Inventory Value:</Typography>
                 <Typography variant="h6">
-                  £{totalInventoryValue.toFixed(2)}
+                  {formatCurrency(totalInventoryValue)}
                 </Typography>
               </Box>
             </CardContent>

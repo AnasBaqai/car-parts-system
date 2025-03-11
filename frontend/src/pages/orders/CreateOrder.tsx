@@ -46,6 +46,7 @@ import {
   CreateOrderRequest,
 } from "../../store/slices/ordersSlice";
 import BarcodeOrderScanner from "../../components/BarcodeOrderScanner";
+import { formatCurrency } from "../../utils/formatters";
 
 interface Category {
   _id: string;
@@ -613,10 +614,10 @@ const CreateOrder: React.FC = () => {
                             </Box>
                           </TableCell>
                           <TableCell align="right">
-                            £{part.price.toFixed(2)}
+                            {formatCurrency(part.price)}
                           </TableCell>
                           <TableCell align="right">
-                            £{(part.price * part.quantity).toFixed(2)}
+                            {formatCurrency(part.price * part.quantity)}
                           </TableCell>
                           <TableCell align="right">
                             <IconButton
@@ -637,7 +638,7 @@ const CreateOrder: React.FC = () => {
                         </TableCell>
                         <TableCell align="right">
                           <Typography variant="h6">
-                            £{calculateTotal().toFixed(2)}
+                            {formatCurrency(calculateTotal())}
                           </Typography>
                         </TableCell>
                         <TableCell />
@@ -761,7 +762,7 @@ const CreateOrder: React.FC = () => {
                       }}
                     >
                       <TableCell>{part.name}</TableCell>
-                      <TableCell>£{part.price.toFixed(2)}</TableCell>
+                      <TableCell>{formatCurrency(part.price)}</TableCell>
                       <TableCell>
                         <Typography
                           color={part.quantity < 5 ? "error" : "inherit"}

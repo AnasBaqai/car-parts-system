@@ -43,6 +43,7 @@ import { getCategories } from "../../store/slices/categoriesSlice";
 import PartDialog, {
   PartFormData as PartDialogFormData,
 } from "../../components/parts/PartDialog";
+import { formatCurrency } from "../../utils/formatters";
 
 // Keep this for backward compatibility but don't use it for the handleSubmit function
 // type PartFormData = Omit<Part, "_id">;
@@ -249,7 +250,9 @@ const Parts: React.FC = () => {
                 <TableCell>{part.name}</TableCell>
                 <TableCell>{getCategoryName(part.category)}</TableCell>
                 <TableCell>{part.manufacturer}</TableCell>
-                <TableCell align="right">£{part.price.toFixed(2)}</TableCell>
+                <TableCell align="right">
+                  {formatCurrency(part.price)}
+                </TableCell>
                 <TableCell align="right">{part.quantity}</TableCell>
                 <TableCell>
                   {part.barcode ? (

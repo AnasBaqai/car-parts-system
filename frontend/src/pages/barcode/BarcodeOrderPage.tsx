@@ -40,6 +40,7 @@ import {
   setCurrentBarcode,
 } from "../../store/slices/barcodeSlice";
 import BarcodeOrderScanner from "../../components/BarcodeOrderScanner";
+import { formatCurrency } from "../../utils/formatters";
 
 const BarcodeOrderPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -310,7 +311,7 @@ const BarcodeOrderPage: React.FC = () => {
                         </Typography>
                       )}
                     </TableCell>
-                    <TableCell>£{item.part.price.toFixed(2)}</TableCell>
+                    <TableCell>{formatCurrency(item.part.price)}</TableCell>
                     <TableCell align="center">
                       <Box
                         sx={{
@@ -346,7 +347,7 @@ const BarcodeOrderPage: React.FC = () => {
                       </Box>
                     </TableCell>
                     <TableCell align="right">
-                      £{(item.part.price * item.quantity).toFixed(2)}
+                      {formatCurrency(item.part.price * item.quantity)}
                     </TableCell>
                     <TableCell align="right">
                       <IconButton
@@ -366,7 +367,7 @@ const BarcodeOrderPage: React.FC = () => {
                   </TableCell>
                   <TableCell align="right">
                     <Typography variant="h6">
-                      £{totalAmount.toFixed(2)}
+                      {formatCurrency(totalAmount)}
                     </Typography>
                   </TableCell>
                   <TableCell />
@@ -428,15 +429,15 @@ const BarcodeOrderPage: React.FC = () => {
             {items.map((item) => (
               <tr key={item.part._id}>
                 <td>{item.part.name}</td>
-                <td>£{item.part.price.toFixed(2)}</td>
+                <td>{formatCurrency(item.part.price)}</td>
                 <td>{item.quantity}</td>
-                <td>£{(item.part.price * item.quantity).toFixed(2)}</td>
+                <td>{formatCurrency(item.part.price * item.quantity)}</td>
               </tr>
             ))}
           </tbody>
         </table>
         <div className="total">
-          <p>Total: £{totalAmount.toFixed(2)}</p>
+          <p>Total: {formatCurrency(totalAmount)}</p>
         </div>
         {customerName && <p>Customer: {customerName}</p>}
         {customerPhone && <p>Phone: {customerPhone}</p>}
@@ -478,7 +479,7 @@ const BarcodeOrderPage: React.FC = () => {
               </Select>
             </FormControl>
             <Typography variant="h6" align="right">
-              Total: £{totalAmount.toFixed(2)}
+              Total: {formatCurrency(totalAmount)}
             </Typography>
           </Box>
         </DialogContent>

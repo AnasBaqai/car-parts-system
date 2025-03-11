@@ -32,6 +32,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux";
 import { getOrders, updateOrderStatus } from "../../store/slices/ordersSlice";
 import { format } from "date-fns";
+import { formatCurrency } from "../../utils/formatters";
 
 interface OrderItem {
   part: string;
@@ -219,10 +220,7 @@ const Orders: React.FC = () => {
 
       setAlertInfo({
         open: true,
-        message:
-          paymentData.paymentMethod === "CASH"
-            ? `Payment successful. Change to return: £${change.toFixed(2)}`
-            : "Card payment processed successfully",
+        message: getAlertMessage(),
         severity: "success",
       });
 
@@ -236,6 +234,13 @@ const Orders: React.FC = () => {
         severity: "error",
       });
     }
+  };
+
+  const getAlertMessage = () => {
+    const change = (paymentData.cashReceived || 0) - paymentData.totalAmount;
+    return paymentData.paymentMethod === "CASH" && change > 0
+      ? `Payment successful. Change to return: ${formatCurrency(change)}`
+      : "Payment successful";
   };
 
   if (loading && orders.length === 0) {
@@ -357,7 +362,7 @@ const Orders: React.FC = () => {
                   {order.customerPhone}
                 </TableCell>
                 <TableCell>{order.items.length} items</TableCell>
-                <TableCell>£{order.totalAmount.toFixed(2)}</TableCell>
+                <TableCell>{formatCurrency(order.totalAmount)}</TableCell>
                 <TableCell>
                   {order.paymentMethod ? (
                     <Chip
@@ -424,7 +429,7 @@ const Orders: React.FC = () => {
                 Order Number: {paymentData.orderNumber}
               </Typography>
               <Typography variant="h6" sx={{ mt: 1 }}>
-                Total Amount: £{paymentData.totalAmount.toFixed(2)}
+                Total Amount: {formatCurrency(paymentData.totalAmount)}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -465,10 +470,10 @@ const Orders: React.FC = () => {
                 {paymentData.cashReceived &&
                   paymentData.cashReceived >= paymentData.totalAmount && (
                     <Typography color="success.main" sx={{ mt: 1 }}>
-                      Change to return: £
-                      {(
+                      Change to return:{" "}
+                      {formatCurrency(
                         paymentData.cashReceived - paymentData.totalAmount
-                      ).toFixed(2)}
+                      )}
                     </Typography>
                   )}
               </Grid>
