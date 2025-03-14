@@ -7,7 +7,8 @@ export const getCategories = async (
   res: Response
 ): Promise<void> => {
   try {
-    const categories = await Category.find();
+    // Filter categories by the current user
+    const categories = await Category.find({ user: req.user._id });
     res.json(categories);
   } catch (error) {
     res.status(500).json({ message: "Server error" });
@@ -20,7 +21,12 @@ export const getCategory = async (
   res: Response
 ): Promise<void> => {
   try {
-    const category = await Category.findById(req.params.id);
+    // Find category by ID and user
+    const category = await Category.findOne({
+      _id: req.params.id,
+      user: req.user._id,
+    });
+
     if (!category) {
       res.status(404).json({ message: "Category not found" });
       return;
@@ -39,15 +45,22 @@ export const createCategory = async (
   try {
     const { name, description } = req.body;
 
-    const categoryExists = await Category.findOne({ name });
+    // Check if category exists for this user
+    const categoryExists = await Category.findOne({
+      name,
+      user: req.user._id,
+    });
+
     if (categoryExists) {
       res.status(400).json({ message: "Category already exists" });
       return;
     }
 
+    // Add user ID to the category
     const category = await Category.create({
       name,
       description,
+      user: req.user._id,
     });
 
     res.status(201).json(category);
@@ -62,10 +75,15 @@ export const updateCategory = async (
   res: Response
 ): Promise<void> => {
   try {
-    const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    // Find and update category by ID and user
+    const category = await Category.findOneAndUpdate(
+      { _id: req.params.id, user: req.user._id },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     if (!category) {
       res.status(404).json({ message: "Category not found" });
@@ -84,7 +102,12 @@ export const deleteCategory = async (
   res: Response
 ): Promise<void> => {
   try {
-    const category = await Category.findByIdAndDelete(req.params.id);
+    // Find and delete category by ID and user
+    const category = await Category.findOneAndDelete({
+      _id: req.params.id,
+      user: req.user._id,
+    });
+
     if (!category) {
       res.status(404).json({ message: "Category not found" });
       return;

@@ -10,6 +10,7 @@ export interface IPart extends Document {
   manufacturer?: string;
   partNumber: string;
   barcode?: string;
+  user: mongoose.Types.ObjectId;
 }
 
 const partSchema = new Schema(
@@ -50,18 +51,25 @@ const partSchema = new Schema(
     partNumber: {
       type: String,
       required: true,
-      unique: true,
     },
     barcode: {
       type: String,
-      unique: true,
       sparse: true, // Allows null/undefined values to not trigger uniqueness constraint
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
   },
   {
     timestamps: true,
   }
 );
+
+// Create compound indexes for uniqueness per user
+partSchema.index({ partNumber: 1, user: 1 }, { unique: true });
+partSchema.index({ barcode: 1, user: 1 }, { unique: true, sparse: true });
 
 // Index for faster searching
 partSchema.index({

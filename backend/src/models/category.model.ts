@@ -3,6 +3,7 @@ import mongoose, { Document, Schema } from "mongoose";
 export interface ICategory extends Document {
   name: string;
   description: string;
+  user: mongoose.Types.ObjectId;
 }
 
 const categorySchema = new Schema(
@@ -10,10 +11,14 @@ const categorySchema = new Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     description: {
       type: String,
+      required: true,
+    },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
   },
@@ -21,5 +26,7 @@ const categorySchema = new Schema(
     timestamps: true,
   }
 );
+
+categorySchema.index({ name: 1, user: 1 }, { unique: true });
 
 export default mongoose.model<ICategory>("Category", categorySchema);

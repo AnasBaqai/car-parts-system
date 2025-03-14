@@ -143,7 +143,7 @@ export const updateOrderStatus = createAsyncThunk(
 export const getSalesReport = createAsyncThunk(
   "orders/getSalesReport",
   async (
-    { startDate, endDate }: { startDate: string; endDate: string },
+    { year, month }: { year: number; month: number },
     { rejectWithValue, getState }
   ) => {
     try {
@@ -153,12 +153,14 @@ export const getSalesReport = createAsyncThunk(
           Authorization: `Bearer ${auth.user.token}`,
         },
       };
+      console.log(`Fetching sales report for ${year}-${month}`);
       const response = await api.get(
-        `/orders/report?startDate=${startDate}&endDate=${endDate}`,
+        `/orders/report?year=${year}&month=${month}`,
         config
       );
       return response.data;
     } catch (error: any) {
+      console.error("Error fetching sales report:", error);
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch sales report"
       );

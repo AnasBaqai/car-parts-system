@@ -165,16 +165,13 @@ const Reports: React.FC = () => {
 
   // Fetch sales report data when selected date changes
   useEffect(() => {
-    const start = startOfMonth(selectedDate);
-    const end = endOfMonth(selectedDate);
-
     dispatch(
       getSalesReport({
-        startDate: start.toISOString(),
-        endDate: end.toISOString(),
+        year: selectedYear,
+        month: selectedMonth + 1, // JavaScript months are 0-indexed, but our API expects 1-indexed
       })
     );
-  }, [dispatch, selectedDate]);
+  }, [dispatch, selectedYear, selectedMonth]);
 
   // Process sales data for charts when salesReport changes
   useEffect(() => {

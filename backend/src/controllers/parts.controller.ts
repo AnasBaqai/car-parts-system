@@ -4,7 +4,8 @@ import Part, { IPart } from "../models/part.model";
 // Get all parts
 export const getParts = async (req: Request, res: Response): Promise<void> => {
   try {
-    const parts = await Part.find().populate("category");
+    // Filter parts by the current user
+    const parts = await Part.find({ user: req.user._id }).populate("category");
     res.json(parts);
   } catch (error: any) {
     console.error("Error fetching parts:", error);
@@ -15,7 +16,12 @@ export const getParts = async (req: Request, res: Response): Promise<void> => {
 // Get single part
 export const getPart = async (req: Request, res: Response): Promise<void> => {
   try {
-    const part = await Part.findById(req.params.id).populate("category");
+    // Find part by ID and user
+    const part = await Part.findOne({
+      _id: req.params.id,
+      user: req.user._id,
+    }).populate("category");
+
     if (!part) {
       res.status(404).json({ message: "Part not found" });
       return;
@@ -34,7 +40,11 @@ export const getPartByBarcode = async (
 ): Promise<void> => {
   try {
     const { barcode } = req.params;
-    const part = await Part.findOne({ barcode }).populate("category");
+    // Find part by barcode and user
+    const part = await Part.findOne({
+      barcode,
+      user: req.user._id,
+    }).populate("category");
 
     if (!part) {
       res.status(404).json({ message: "Part not found with this barcode" });
@@ -58,7 +68,12 @@ export const createPart = async (
 ): Promise<void> => {
   try {
     console.log("Creating part with data:", req.body);
-    const part = await Part.create(req.body);
+    // Add user ID to the part
+    const partData = {
+      ...req.body,
+      user: req.user._id,
+    };
+    const part = await Part.create(partData);
     res.status(201).json(part);
   } catch (error: any) {
     console.error("Error creating part:", error);
@@ -75,10 +90,15 @@ export const updatePart = async (
     console.log("Updating part with ID:", req.params.id);
     console.log("Update data:", JSON.stringify(req.body, null, 2));
 
-    const part = await Part.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    }).populate("category");
+    // Find and update part by ID and user
+    const part = await Part.findOneAndUpdate(
+      { _id: req.params.id, user: req.user._id },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    ).populate("category");
 
     if (!part) {
       console.error(`Part with ID ${req.params.id} not found for update`);
@@ -112,7 +132,12 @@ export const deletePart = async (
 ): Promise<void> => {
   try {
     console.log("Deleting part with ID:", req.params.id);
-    const part = await Part.findByIdAndDelete(req.params.id);
+    // Find and delete part by ID and user
+    const part = await Part.findOneAndDelete({
+      _id: req.params.id,
+      user: req.user._id,
+    });
+
     if (!part) {
       console.error(`Part with ID ${req.params.id} not found for deletion`);
       res.status(404).json({ message: "Part not found" });
@@ -134,8 +159,12 @@ export const searchParts = async (
   try {
     const { query } = req.query;
     console.log("Searching parts with query:", query);
+    // Search parts by text and filter by user
     const parts = await Part.find(
-      { $text: { $search: query as string } },
+      {
+        $text: { $search: query as string },
+        user: req.user._id,
+      },
       { score: { $meta: "textScore" } }
     )
       .sort({ score: { $meta: "textScore" } })
@@ -153,8 +182,10 @@ export const getLowStockParts = async (
   res: Response
 ): Promise<void> => {
   try {
+    // Get low stock parts filtered by user
     const parts = await Part.find({
       $expr: { $lte: ["$quantity", "$minQuantity"] },
+      user: req.user._id,
     }).populate("category");
     res.json(parts);
   } catch (error: any) {

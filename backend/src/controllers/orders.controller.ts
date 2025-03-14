@@ -6,7 +6,8 @@ import { generateReceipt } from "../utils/receiptGenerator";
 // Get all orders
 export const getOrders = async (req: Request, res: Response): Promise<void> => {
   try {
-    const orders = await Order.find()
+    // Filter orders by the current user
+    const orders = await Order.find({ user: req.user._id })
       .populate({
         path: "items.part",
         populate: { path: "category" },
@@ -21,10 +22,15 @@ export const getOrders = async (req: Request, res: Response): Promise<void> => {
 // Get single order
 export const getOrder = async (req: Request, res: Response): Promise<void> => {
   try {
-    const order = await Order.findById(req.params.id).populate({
+    // Find order by ID and user
+    const order = await Order.findOne({
+      _id: req.params.id,
+      user: req.user._id,
+    }).populate({
       path: "items.part",
       populate: { path: "category" },
     });
+
     if (!order) {
       res.status(404).json({ message: "Order not found" });
       return;
@@ -41,44 +47,19 @@ export const createOrder = async (
   res: Response
 ): Promise<void> => {
   try {
-    console.log("Creating new order with data:", req.body);
-    const { items, paymentMethod, customerName, customerPhone } = req.body;
+    const {
+      items,
+      totalAmount,
+      status,
+      customerName,
+      customerPhone,
+      paymentMethod,
+    } = req.body;
 
+    // Validate items
     if (!items || !Array.isArray(items) || items.length === 0) {
-      console.error("Order creation failed: No items provided");
-      res.status(400).json({ message: "Order must contain at least one item" });
+      res.status(400).json({ message: "Items are required" });
       return;
-    }
-
-    // Calculate total amount and validate inventory
-    let totalAmount = 0;
-    const inventoryUpdates = [];
-    for (const item of items) {
-      console.log(`Processing item: ${item.part}`);
-      const part = await Part.findById(item.part);
-
-      if (!part) {
-        console.error(`Order creation failed: Part ${item.part} not found`);
-        res.status(404).json({ message: `Part ${item.part} not found` });
-        return;
-      }
-
-      if (part.quantity < item.quantity) {
-        console.error(
-          `Order creation failed: Insufficient stock for part ${part.name}. ` +
-            `Requested: ${item.quantity}, Available: ${part.quantity}`
-        );
-        res.status(400).json({
-          message: `Insufficient stock for part ${part.name}. Available: ${part.quantity}`,
-        });
-        return;
-      }
-
-      totalAmount += part.price * item.quantity;
-      inventoryUpdates.push({
-        partId: part._id,
-        quantity: item.quantity,
-      });
     }
 
     // Generate order number
@@ -91,36 +72,40 @@ export const createOrder = async (
       .padStart(4, "0");
     const orderNumber = `ORD-${year}${month}${day}-${random}`;
 
-    console.log("Creating order with total amount:", totalAmount);
-    const order = await Order.create({
+    // Add user ID to the order
+    const orderData = {
       orderNumber,
-      items: items.map((item: any) => ({
-        ...item,
-        price: item.price,
-      })),
+      items,
       totalAmount,
-      paymentMethod,
+      status,
       customerName,
       customerPhone,
-      status: "PENDING",
+      paymentMethod,
+      user: req.user._id,
+    };
+
+    // Create the order
+    const order = await Order.create(orderData);
+
+    // Populate the order with part details
+    const populatedOrder = await Order.findById(order._id).populate({
+      path: "items.part",
+      populate: { path: "category" },
     });
 
-    // Update inventory only after order is successfully created
-    for (const update of inventoryUpdates) {
-      await Part.findByIdAndUpdate(update.partId, {
-        $inc: { quantity: -update.quantity },
-      });
-      console.log(`Updated inventory for part ${update.partId}`);
+    // Update inventory
+    for (const item of items) {
+      // Only update parts that belong to the current user
+      await Part.findOneAndUpdate(
+        { _id: item.part, user: req.user._id },
+        { $inc: { quantity: -item.quantity } }
+      );
     }
 
-    console.log("Order created successfully:", order._id);
-    res.status(201).json(order);
+    res.status(201).json(populatedOrder);
   } catch (error) {
-    console.error("Order creation failed with error:", error);
-    res.status(500).json({
-      message: "Failed to create order",
-      error: error instanceof Error ? error.message : "Unknown error",
-    });
+    console.error("Error creating order:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -130,59 +115,44 @@ export const updateOrderStatus = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { status, paymentMethod } = req.body;
-    console.log("Update order request received:", {
-      orderId: req.params.id,
-      status,
-      paymentMethod,
-      headers: req.headers,
-    });
+    const { status, paymentMethod, cashReceived } = req.body;
 
-    if (!req.headers.authorization) {
-      console.error("No authorization header found");
-      res.status(401).json({ message: "Authorization header missing" });
-      return;
+    // Calculate change amount if needed
+    let changeAmount;
+    if (cashReceived && paymentMethod === "CASH") {
+      const existingOrder = await Order.findOne({
+        _id: req.params.id,
+        user: req.user._id,
+      });
+      if (existingOrder) {
+        changeAmount = cashReceived - existingOrder.totalAmount;
+      }
     }
 
-    const updateData: any = { status };
-    if (paymentMethod) {
-      updateData.paymentMethod = paymentMethod;
-    }
-
-    console.log("Updating order with data:", updateData);
-
-    const order = await Order.findByIdAndUpdate(req.params.id, updateData, {
-      new: true,
-    }).populate({
+    // Find and update order by ID and user
+    const order = await Order.findOneAndUpdate(
+      { _id: req.params.id, user: req.user._id },
+      {
+        status,
+        paymentMethod,
+        ...(cashReceived && { cashReceived }),
+        ...(changeAmount !== undefined && { changeAmount }),
+      },
+      { new: true }
+    ).populate({
       path: "items.part",
       populate: { path: "category" },
     });
 
     if (!order) {
-      console.error(`Order ${req.params.id} not found`);
       res.status(404).json({ message: "Order not found" });
       return;
     }
 
-    // If order is cancelled, restore inventory
-    if (status === "CANCELLED") {
-      console.log(`Restoring inventory for cancelled order ${order._id}`);
-      for (const item of order.items) {
-        await Part.findByIdAndUpdate(item.part, {
-          $inc: { quantity: item.quantity },
-        });
-        console.log(`Restored ${item.quantity} units to part ${item.part}`);
-      }
-    }
-
-    console.log(`Order ${order._id} updated successfully:`, order);
     res.json(order);
   } catch (error) {
-    console.error("Order status update failed:", error);
-    res.status(500).json({
-      message: "Failed to update order status",
-      error: error instanceof Error ? error.message : "Unknown error",
-    });
+    console.error("Error updating order status:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -192,99 +162,109 @@ export const getSalesReport = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { startDate, endDate } = req.query;
-    const query: any = { status: "COMPLETED" };
+    const { year, month } = req.query;
 
-    if (startDate && endDate) {
-      query.createdAt = {
-        $gte: new Date(startDate as string),
-        $lte: new Date(endDate as string),
-      };
+    // Validate year and month parameters
+    const yearNum = year ? parseInt(year as string) : new Date().getFullYear();
+    const monthNum = month
+      ? parseInt(month as string)
+      : new Date().getMonth() + 1;
+
+    // Validate that year and month are valid numbers
+    if (isNaN(yearNum) || isNaN(monthNum) || monthNum < 1 || monthNum > 12) {
+      res.status(400).json({
+        message:
+          "Invalid date parameters. Year must be a valid number and month must be between 1-12.",
+      });
+      return;
     }
 
-    const orders = await Order.find(query)
-      .populate({
-        path: "items.part",
-        populate: { path: "category" },
-      })
-      .sort({ createdAt: 1 }); // Sort by date ascending
+    console.log(`Generating sales report for ${yearNum}-${monthNum}`);
 
+    // Create date range for the specified month
+    const startDate = new Date(yearNum, monthNum - 1, 1);
+    const endDate = new Date(yearNum, monthNum, 0); // Last day of the month
+
+    // Verify dates are valid before proceeding
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      res.status(400).json({ message: "Invalid date range generated" });
+      return;
+    }
+
+    console.log(
+      `Date range: ${startDate.toISOString()} to ${endDate.toISOString()}`
+    );
+
+    // Get completed orders for the current user within the date range
+    const orders = await Order.find({
+      status: "COMPLETED",
+      user: req.user._id,
+      createdAt: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    }).populate({
+      path: "items.part",
+      populate: { path: "category" },
+    });
+
+    console.log(`Found ${orders.length} orders in date range`);
+
+    // Calculate total sales
     const totalSales = orders.reduce(
-      (acc, order) => acc + order.totalAmount,
+      (sum, order) => sum + order.totalAmount,
       0
     );
-    const salesByPaymentMethod = orders.reduce((acc: any, order) => {
-      if (order.paymentMethod) {
-        acc[order.paymentMethod] =
-          (acc[order.paymentMethod] || 0) + order.totalAmount;
-      } else {
-        acc["UNPAID"] = (acc["UNPAID"] || 0) + order.totalAmount;
-      }
-      return acc;
-    }, {});
+
+    // Calculate sales by payment method
+    const salesByPaymentMethod = {
+      CASH: orders
+        .filter((order) => order.paymentMethod === "CASH")
+        .reduce((sum, order) => sum + order.totalAmount, 0),
+      CARD: orders
+        .filter((order) => order.paymentMethod === "CARD")
+        .reduce((sum, order) => sum + order.totalAmount, 0),
+    };
 
     res.json({
-      orders,
       totalSales,
       salesByPaymentMethod,
+      orders,
+      dateRange: {
+        start: startDate,
+        end: endDate,
+      },
     });
   } catch (error) {
-    console.error("Error fetching sales report:", error);
-    res.status(500).json({
-      message: "Server error",
-      error: error instanceof Error ? error.message : "Unknown error",
-    });
+    console.error("Error generating sales report:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
-// Generate receipt for an order
+// Generate order receipt
 export const generateOrderReceipt = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    console.log("Generating receipt for order:", { orderId: req.params.id });
-
-    const order = await Order.findById(req.params.id).populate({
+    // Find order by ID and user
+    const order = await Order.findOne({
+      _id: req.params.id,
+      user: req.user._id,
+    }).populate({
       path: "items.part",
-      populate: { path: "category" },
+      select: "name partNumber",
     });
 
     if (!order) {
-      console.log("Order not found:", { orderId: req.params.id });
-      res.status(404).json({ message: "No order found with that ID" });
+      res.status(404).json({ message: "Order not found" });
       return;
     }
 
-    console.log("Found order data:", {
-      orderNumber: order.orderNumber,
-      items: order.items.length,
-      totalAmount: order.totalAmount,
-    });
-
-    try {
-      const receipt = generateReceipt(order);
-      console.log("Receipt generated successfully");
-
-      res.status(200).json({
-        status: "success",
-        data: {
-          receipt,
-        },
-      });
-    } catch (receiptError) {
-      console.error("Receipt generation failed:", {
-        error:
-          receiptError instanceof Error ? receiptError.message : receiptError,
-        orderData: order,
-      });
-      res.status(500).json({ message: "Failed to generate receipt" });
-    }
+    const receipt = generateReceipt(order);
+    res.json({ status: "success", data: { receipt } });
   } catch (error) {
-    console.error("Error in generateOrderReceipt:", {
-      error: error instanceof Error ? error.message : error,
-      orderId: req.params.id,
-    });
+    console.error("Error generating receipt:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
