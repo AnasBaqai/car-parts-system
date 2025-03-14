@@ -16,6 +16,7 @@ import Layout from "./components/Layout";
 import PrivateRoute from "./components/PrivateRoute";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import PendingVerification from "./pages/auth/PendingVerification";
 import Dashboard from "./pages/Dashboard";
 import Parts from "./pages/parts/Parts";
 import Categories from "./pages/categories/Categories";
@@ -23,6 +24,8 @@ import Orders from "./pages/orders/Orders";
 import CreateOrder from "./pages/orders/CreateOrder";
 import Reports from "./pages/reports/Reports";
 import Settings from "./pages/settings/Settings";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import CreateAdmin from "./pages/admin/CreateAdmin";
 
 const App: React.FC = () => {
   return (
@@ -33,6 +36,11 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route
+              path="/pending-verification"
+              element={<PendingVerification />}
+            />
+            <Route path="/admin/create" element={<CreateAdmin />} />
             <Route element={<Layout />}>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route
@@ -88,6 +96,14 @@ const App: React.FC = () => {
                 element={
                   <PrivateRoute>
                     <Settings />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/admin/dashboard"
+                element={
+                  <PrivateRoute adminOnly={true}>
+                    <AdminDashboard />
                   </PrivateRoute>
                 }
               />

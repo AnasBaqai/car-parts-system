@@ -5,6 +5,8 @@ interface User {
   _id: string;
   username: string;
   email: string;
+  role: "admin" | "user";
+  status: "pending" | "verified" | "rejected";
   token: string;
 }
 

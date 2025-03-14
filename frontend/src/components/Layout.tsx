@@ -18,6 +18,7 @@ import {
   Menu,
   MenuItem,
   Divider,
+  Chip,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -29,6 +30,7 @@ import {
   Logout as LogoutIcon,
   Settings as SettingsIcon,
   Person as PersonIcon,
+  AdminPanelSettings as AdminIcon,
 } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../hooks/redux";
 import { logout } from "../store/slices/authSlice";
@@ -73,6 +75,16 @@ const Layout: React.FC = () => {
     { text: "Orders", icon: <OrderIcon />, path: "/orders" },
     { text: "Reports", icon: <ReportIcon />, path: "/reports" },
     { text: "Settings", icon: <SettingsIcon />, path: "/settings" },
+    // Admin menu item - only shown to admin users
+    ...(user?.role === "admin"
+      ? [
+          {
+            text: "Admin Dashboard",
+            icon: <AdminIcon />,
+            path: "/admin/dashboard",
+          },
+        ]
+      : []),
   ];
 
   const drawer = (
@@ -162,6 +174,24 @@ const Layout: React.FC = () => {
                 <Typography variant="body2" color="text.secondary">
                   {user?.email}
                 </Typography>
+                <Box sx={{ mt: 1, display: "flex", gap: 1 }}>
+                  <Chip
+                    label={user?.role === "admin" ? "Admin" : "User"}
+                    color={user?.role === "admin" ? "primary" : "default"}
+                    size="small"
+                  />
+                  <Chip
+                    label={user?.status}
+                    color={
+                      user?.status === "verified"
+                        ? "success"
+                        : user?.status === "pending"
+                        ? "warning"
+                        : "error"
+                    }
+                    size="small"
+                  />
+                </Box>
               </Box>
               <Divider />
               <MenuItem onClick={handleSettingsClick}>

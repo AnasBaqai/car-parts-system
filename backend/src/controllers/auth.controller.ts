@@ -39,6 +39,16 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    // Check if user account is verified
+    if (user.role !== "admin" && user.status !== "verified") {
+      console.error(`Login failed: Account not verified - ${email}`);
+      res.status(403).json({
+        message:
+          "Your account is pending verification. Please wait for admin approval.",
+      });
+      return;
+    }
+
     const userId = user._id.toString();
     console.log(`Login successful: ${email} (${userId})`);
 
@@ -46,6 +56,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       _id: userId,
       username: user.username,
       email: user.email,
+      role: user.role,
+      status: user.status,
       token: generateToken(userId),
     });
   } catch (error) {
@@ -94,6 +106,8 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       username,
       email,
       password,
+      role: "user",
+      status: "pending",
     });
 
     const userId = user._id.toString();
@@ -103,7 +117,11 @@ export const register = async (req: Request, res: Response): Promise<void> => {
       _id: userId,
       username: user.username,
       email: user.email,
+      role: user.role,
+      status: user.status,
       token: generateToken(userId),
+      message:
+        "Registration successful. Your account is pending verification by an admin.",
     });
   } catch (error) {
     console.error("Registration error:", error);

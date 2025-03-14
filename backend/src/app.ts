@@ -8,6 +8,7 @@ import authRoutes from "./routes/auth.routes";
 import partsRoutes from "./routes/parts.routes";
 import ordersRoutes from "./routes/orders.routes";
 import categoriesRoutes from "./routes/categories.routes";
+import adminRoutes from "./routes/admin.routes";
 
 // Load environment variables
 dotenv.config();
@@ -35,6 +36,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/parts", partsRoutes);
 app.use("/api/orders", ordersRoutes);
 app.use("/api/categories", categoriesRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Error handling middleware
 app.use(

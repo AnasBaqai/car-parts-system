@@ -29,7 +29,13 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      navigate("/dashboard");
+      if (user.role === "admin") {
+        navigate("/dashboard");
+      } else if (user.status === "verified") {
+        navigate("/dashboard");
+      } else {
+        navigate("/pending-verification");
+      }
     }
     return () => {
       dispatch(clearError());
