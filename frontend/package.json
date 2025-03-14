@@ -50,6 +50,9 @@
     ]
   },
   "devDependencies": {
-    "@types/date-fns": "^2.5.3"
+    "@types/date-fns": "^2.5.3",
+    "concurrently": "^9.1.2",
+    "electron-is-dev": "^2.0.0",
+    "wait-on": "^8.0.3"
   }
 }

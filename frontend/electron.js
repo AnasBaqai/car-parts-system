@@ -1,6 +1,18 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
-const isDev = require("electron-is-dev");
+// Replace require with a variable we'll set later
+let isDev = false;
+
+// Initialize isDev first
+(async () => {
+  try {
+    const electronIsDev = await import("electron-is-dev");
+    isDev = electronIsDev.default;
+  } catch (error) {
+    console.error("Failed to import electron-is-dev:", error);
+    isDev = process.env.NODE_ENV === "development";
+  }
+})();
 
 function createWindow() {
   // Create the browser window.
