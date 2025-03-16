@@ -8,6 +8,18 @@ This directory contains sample data for the Car Parts System in JSON format. You
 2. **parts.json** - Contains 25 parts with references to categories
 3. **orders.json** - Contains 25 orders with references to parts
 
+## Multi-Tenant Structure
+
+The sample data has been updated to support the multi-tenant architecture. All data is associated with a single user ID (`67d580341d40dbf5dfe6d761`). Each document includes a `user` field that references this user ID.
+
+## Dual Pricing Structure
+
+The sample data uses a dual pricing structure with both buying and selling prices for parts. This allows for:
+
+- Tracking the cost of inventory (buying price)
+- Setting appropriate retail prices (selling price)
+- Calculating profit margins for each part and order
+
 ## How to Import the Data
 
 ### Using MongoDB Compass
@@ -40,6 +52,7 @@ The sample data includes MongoDB ObjectIDs and proper references between collect
 1. Each document has a unique `_id` field with an ObjectID.
 2. In the parts collection, the `category` field references the corresponding category's `_id`.
 3. In the orders collection, each item's `part` field references the corresponding part's `_id`.
+4. All documents include a `user` field with the ID `67d580341d40dbf5dfe6d761`.
 
 This means you can import the data directly without needing to manually replace any IDs. The relationships between collections are already established.
 
@@ -51,7 +64,8 @@ This means you can import the data directly without needing to manually replace 
 {
   "_id": { "$oid": "..." },
   "name": "Category Name",
-  "description": "Category Description"
+  "description": "Category Description",
+  "user": { "$oid": "67d580341d40dbf5dfe6d761" }
 }
 ```
 
@@ -63,12 +77,14 @@ This means you can import the data directly without needing to manually replace 
   "name": "Part Name",
   "description": "Part Description",
   "category": { "$oid": "..." }, // Reference to category ID
-  "price": 0.0,
+  "buyingPrice": 0.0, // Cost price of the part
+  "sellingPrice": 0.0, // Retail price of the part
   "quantity": 0,
   "minQuantity": 0,
   "manufacturer": "Manufacturer Name",
   "partNumber": "Part Number",
-  "barcode": "Barcode Number"
+  "barcode": "Barcode Number",
+  "user": { "$oid": "67d580341d40dbf5dfe6d761" }
 }
 ```
 
@@ -82,7 +98,7 @@ This means you can import the data directly without needing to manually replace 
     {
       "part": { "$oid": "..." }, // Reference to part ID
       "quantity": 0,
-      "price": 0.0
+      "price": 0.0 // This is the selling price at the time of order
     }
   ],
   "totalAmount": 0.0,
@@ -90,7 +106,8 @@ This means you can import the data directly without needing to manually replace 
   "status": "PENDING, COMPLETED, or CANCELLED",
   "customerName": "Customer Name",
   "customerPhone": "Customer Phone",
-  "createdAt": "ISO Date String"
+  "createdAt": "ISO Date String",
+  "user": { "$oid": "67d580341d40dbf5dfe6d761" }
 }
 ```
 

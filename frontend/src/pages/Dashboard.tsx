@@ -43,7 +43,7 @@ const Dashboard: React.FC = () => {
   const loading = partsLoading || categoriesLoading || ordersLoading;
 
   const totalInventoryValue = parts.reduce(
-    (total, part) => total + part.price * part.quantity,
+    (total, part) => total + part.sellingPrice * part.quantity,
     0
   );
 

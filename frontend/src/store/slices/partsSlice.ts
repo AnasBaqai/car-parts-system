@@ -12,7 +12,8 @@ export interface Part {
   name: string;
   description?: string;
   category: string | Category; // Can be either a string ID or a populated Category object
-  price: number;
+  buyingPrice: number;
+  sellingPrice: number;
   quantity: number;
   minQuantity: number;
   manufacturer?: string;

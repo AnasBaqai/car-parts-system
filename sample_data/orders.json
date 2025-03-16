@@ -25,7 +25,10 @@
     "status": "COMPLETED",
     "customerName": "John Smith",
     "customerPhone": "555-123-4567",
-    "createdAt": "2023-06-15T10:30:00.000Z"
+    "createdAt": "2023-06-15T10:30:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -53,7 +56,10 @@
     "status": "COMPLETED",
     "customerName": "Sarah Johnson",
     "customerPhone": "555-234-5678",
-    "createdAt": "2023-06-16T14:45:00.000Z"
+    "createdAt": "2023-06-16T14:45:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -74,7 +80,10 @@
     "status": "COMPLETED",
     "customerName": "Michael Brown",
     "customerPhone": "555-345-6789",
-    "createdAt": "2023-06-18T09:15:00.000Z"
+    "createdAt": "2023-06-18T09:15:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -109,7 +118,10 @@
     "status": "COMPLETED",
     "customerName": "Emily Davis",
     "customerPhone": "555-456-7890",
-    "createdAt": "2023-06-20T16:30:00.000Z"
+    "createdAt": "2023-06-20T16:30:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -130,7 +142,10 @@
     "status": "COMPLETED",
     "customerName": "David Wilson",
     "customerPhone": "555-567-8901",
-    "createdAt": "2023-06-22T11:20:00.000Z"
+    "createdAt": "2023-06-22T11:20:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -151,7 +166,10 @@
     "status": "COMPLETED",
     "customerName": "Jessica Martinez",
     "customerPhone": "555-678-9012",
-    "createdAt": "2023-06-25T13:45:00.000Z"
+    "createdAt": "2023-06-25T13:45:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -172,7 +190,10 @@
     "status": "COMPLETED",
     "customerName": "Robert Taylor",
     "customerPhone": "555-789-0123",
-    "createdAt": "2023-06-28T10:10:00.000Z"
+    "createdAt": "2023-06-28T10:10:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -200,7 +221,10 @@
     "status": "COMPLETED",
     "customerName": "Jennifer Anderson",
     "customerPhone": "555-890-1234",
-    "createdAt": "2023-07-01T15:30:00.000Z"
+    "createdAt": "2023-07-01T15:30:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -228,7 +252,10 @@
     "status": "COMPLETED",
     "customerName": "Christopher Thomas",
     "customerPhone": "555-901-2345",
-    "createdAt": "2023-07-05T09:45:00.000Z"
+    "createdAt": "2023-07-05T09:45:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -249,7 +276,10 @@
     "status": "COMPLETED",
     "customerName": "Amanda White",
     "customerPhone": "555-012-3456",
-    "createdAt": "2023-07-08T14:20:00.000Z"
+    "createdAt": "2023-07-08T14:20:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -270,7 +300,10 @@
     "status": "COMPLETED",
     "customerName": "Daniel Harris",
     "customerPhone": "555-123-4568",
-    "createdAt": "2023-07-10T11:15:00.000Z"
+    "createdAt": "2023-07-10T11:15:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -298,7 +331,10 @@
     "status": "COMPLETED",
     "customerName": "Melissa Clark",
     "customerPhone": "555-234-5679",
-    "createdAt": "2023-07-12T16:40:00.000Z"
+    "createdAt": "2023-07-12T16:40:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -319,7 +355,10 @@
     "status": "COMPLETED",
     "customerName": "Matthew Lewis",
     "customerPhone": "555-345-6780",
-    "createdAt": "2023-07-15T10:30:00.000Z"
+    "createdAt": "2023-07-15T10:30:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -340,7 +379,10 @@
     "status": "COMPLETED",
     "customerName": "Laura Walker",
     "customerPhone": "555-456-7891",
-    "createdAt": "2023-07-18T13:15:00.000Z"
+    "createdAt": "2023-07-18T13:15:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -361,7 +403,10 @@
     "status": "COMPLETED",
     "customerName": "James Hall",
     "customerPhone": "555-567-8902",
-    "createdAt": "2023-07-20T09:50:00.000Z"
+    "createdAt": "2023-07-20T09:50:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -382,7 +427,10 @@
     "status": "COMPLETED",
     "customerName": "Patricia Young",
     "customerPhone": "555-678-9013",
-    "createdAt": "2023-07-22T14:30:00.000Z"
+    "createdAt": "2023-07-22T14:30:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -403,7 +451,10 @@
     "status": "COMPLETED",
     "customerName": "Richard Allen",
     "customerPhone": "555-789-0124",
-    "createdAt": "2023-07-25T11:20:00.000Z"
+    "createdAt": "2023-07-25T11:20:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -431,7 +482,10 @@
     "status": "COMPLETED",
     "customerName": "Elizabeth Scott",
     "customerPhone": "555-890-1235",
-    "createdAt": "2023-07-28T15:45:00.000Z"
+    "createdAt": "2023-07-28T15:45:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -452,7 +506,10 @@
     "status": "COMPLETED",
     "customerName": "Thomas Green",
     "customerPhone": "555-901-2346",
-    "createdAt": "2023-08-01T10:15:00.000Z"
+    "createdAt": "2023-08-01T10:15:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -473,7 +530,10 @@
     "status": "COMPLETED",
     "customerName": "Nancy Baker",
     "customerPhone": "555-012-3457",
-    "createdAt": "2023-08-03T13:30:00.000Z"
+    "createdAt": "2023-08-03T13:30:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -508,7 +568,10 @@
     "status": "COMPLETED",
     "customerName": "William Nelson",
     "customerPhone": "555-123-4569",
-    "createdAt": "2023-08-05T09:45:00.000Z"
+    "createdAt": "2023-08-05T09:45:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -536,7 +599,10 @@
     "status": "COMPLETED",
     "customerName": "Karen Carter",
     "customerPhone": "555-234-5680",
-    "createdAt": "2023-08-08T14:20:00.000Z"
+    "createdAt": "2023-08-08T14:20:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -564,7 +630,10 @@
     "status": "PENDING",
     "customerName": "Steven Mitchell",
     "customerPhone": "555-345-6781",
-    "createdAt": "2023-08-10T11:30:00.000Z"
+    "createdAt": "2023-08-10T11:30:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -592,7 +661,10 @@
     "status": "PENDING",
     "customerName": "Linda Roberts",
     "customerPhone": "555-456-7892",
-    "createdAt": "2023-08-12T15:45:00.000Z"
+    "createdAt": "2023-08-12T15:45:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -620,6 +692,9 @@
     "status": "PENDING",
     "customerName": "Joseph Phillips",
     "customerPhone": "555-567-8903",
-    "createdAt": "2023-08-15T10:15:00.000Z"
+    "createdAt": "2023-08-15T10:15:00.000Z",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   }
 ]

@@ -9,7 +9,8 @@ interface Part {
     _id: string;
     name: string;
   };
-  price: number;
+  buyingPrice: number;
+  sellingPrice: number;
   quantity: number;
   manufacturer: string;
   partNumber: string;
@@ -107,7 +108,7 @@ const barcodeSlice = createSlice({
       );
       if (index !== -1) {
         state.totalAmount -=
-          state.items[index].part.price * state.items[index].quantity;
+          state.items[index].part.sellingPrice * state.items[index].quantity;
         state.items.splice(index, 1);
       }
     },
@@ -116,11 +117,11 @@ const barcodeSlice = createSlice({
       const item = state.items.find((item) => item.part._id === partId);
       if (item) {
         // Subtract the old total for this item
-        state.totalAmount -= item.part.price * item.quantity;
+        state.totalAmount -= item.part.sellingPrice * item.quantity;
         // Update quantity
         item.quantity = quantity;
         // Add the new total for this item
-        state.totalAmount += item.part.price * item.quantity;
+        state.totalAmount += item.part.sellingPrice * item.quantity;
       }
     },
     setCurrentBarcode: (state, action) => {
@@ -151,7 +152,7 @@ const barcodeSlice = createSlice({
             quantity: 1,
           });
           // Update total amount
-          state.totalAmount += action.payload.price;
+          state.totalAmount += action.payload.sellingPrice;
         }
         state.currentBarcode = null;
       })

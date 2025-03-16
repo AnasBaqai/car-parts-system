@@ -146,7 +146,7 @@ const BarcodeOrderPage: React.FC = () => {
       const orderItems = items.map((item) => ({
         part: item.part._id,
         quantity: item.quantity,
-        price: item.part.price,
+        price: item.part.sellingPrice,
       }));
 
       const result = await dispatch(
@@ -318,7 +318,9 @@ const BarcodeOrderPage: React.FC = () => {
                         </Typography>
                       )}
                     </TableCell>
-                    <TableCell>{formatCurrency(item.part.price)}</TableCell>
+                    <TableCell>
+                      {formatCurrency(item.part.sellingPrice)}
+                    </TableCell>
                     <TableCell align="center">
                       <Box
                         sx={{
@@ -354,7 +356,7 @@ const BarcodeOrderPage: React.FC = () => {
                       </Box>
                     </TableCell>
                     <TableCell align="right">
-                      {formatCurrency(item.part.price * item.quantity)}
+                      {formatCurrency(item.part.sellingPrice * item.quantity)}
                     </TableCell>
                     <TableCell align="right">
                       <IconButton
@@ -436,9 +438,11 @@ const BarcodeOrderPage: React.FC = () => {
             {items.map((item) => (
               <tr key={item.part._id}>
                 <td>{item.part.name}</td>
-                <td>{formatCurrency(item.part.price)}</td>
+                <td>{formatCurrency(item.part.sellingPrice)}</td>
                 <td>{item.quantity}</td>
-                <td>{formatCurrency(item.part.price * item.quantity)}</td>
+                <td>
+                  {formatCurrency(item.part.sellingPrice * item.quantity)}
+                </td>
               </tr>
             ))}
           </tbody>

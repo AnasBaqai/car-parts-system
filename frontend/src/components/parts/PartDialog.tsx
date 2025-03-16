@@ -25,7 +25,8 @@ interface Part {
   name: string;
   description?: string;
   category: string; // Always use string ID for category in the form
-  price: number | string;
+  buyingPrice: number | string;
+  sellingPrice: number | string;
   quantity: number | string;
   minQuantity: number | string;
   manufacturer?: string;
@@ -37,7 +38,8 @@ export interface PartFormData {
   name: string;
   description?: string;
   category: string | Category;
-  price: number | string;
+  buyingPrice: number | string;
+  sellingPrice: number | string;
   quantity: number | string;
   minQuantity: number | string;
   manufacturer?: string;
@@ -64,7 +66,8 @@ const PartDialog: React.FC<PartDialogProps> = ({
     name: "",
     description: "",
     category: "",
-    price: 0,
+    buyingPrice: 0,
+    sellingPrice: 0,
     quantity: 0,
     minQuantity: 5,
     manufacturer: "",
@@ -88,7 +91,8 @@ const PartDialog: React.FC<PartDialogProps> = ({
         name: initialData.name,
         description: initialData.description || "",
         category: categoryId,
-        price: initialData.price,
+        buyingPrice: initialData.buyingPrice,
+        sellingPrice: initialData.sellingPrice,
         quantity: initialData.quantity,
         minQuantity: initialData.minQuantity,
         manufacturer: initialData.manufacturer || "",
@@ -105,7 +109,8 @@ const PartDialog: React.FC<PartDialogProps> = ({
         name: "",
         description: "",
         category: "",
-        price: 0,
+        buyingPrice: 0,
+        sellingPrice: 0,
         quantity: 0,
         minQuantity: 5,
         manufacturer: "",
@@ -121,7 +126,10 @@ const PartDialog: React.FC<PartDialogProps> = ({
 
     // Allow empty values for number fields
     if (
-      (name === "price" || name === "quantity" || name === "minQuantity") &&
+      (name === "buyingPrice" ||
+        name === "sellingPrice" ||
+        name === "quantity" ||
+        name === "minQuantity") &&
       value === ""
     ) {
       setFormData((prev) => ({
@@ -134,7 +142,7 @@ const PartDialog: React.FC<PartDialogProps> = ({
     setFormData((prev) => ({
       ...prev,
       [name]:
-        name.includes("price") || name.includes("quantity")
+        name.includes("Price") || name.includes("quantity")
           ? Number(value)
           : value,
     }));
@@ -146,7 +154,10 @@ const PartDialog: React.FC<PartDialogProps> = ({
     // Convert any empty string values to 0 before submitting
     const submissionData = {
       ...formData,
-      price: formData.price === "" ? 0 : Number(formData.price),
+      buyingPrice:
+        formData.buyingPrice === "" ? 0 : Number(formData.buyingPrice),
+      sellingPrice:
+        formData.sellingPrice === "" ? 0 : Number(formData.sellingPrice),
       quantity: formData.quantity === "" ? 0 : Number(formData.quantity),
       minQuantity:
         formData.minQuantity === "" ? 0 : Number(formData.minQuantity),
@@ -246,12 +257,24 @@ const PartDialog: React.FC<PartDialogProps> = ({
               </Grid>
               <Grid item xs={6}>
                 <TextField
-                  name="price"
-                  label="Price"
+                  name="buyingPrice"
+                  label="Buying Price"
                   type="number"
                   fullWidth
                   required
-                  value={formData.price}
+                  value={formData.buyingPrice}
+                  onChange={handleChange}
+                  inputProps={{ min: 0, step: 0.01 }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  name="sellingPrice"
+                  label="Selling Price"
+                  type="number"
+                  fullWidth
+                  required
+                  value={formData.sellingPrice}
                   onChange={handleChange}
                   inputProps={{ min: 0, step: 0.01 }}
                 />

@@ -8,12 +8,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c8e"
     },
-    "price": 8.99,
+    "buyingPrice": 6.29,
+    "sellingPrice": 8.99,
     "quantity": 150,
     "minQuantity": 30,
     "manufacturer": "Bosch",
     "partNumber": "P123456",
-    "barcode": "7891234567890"
+    "barcode": "7891234567890",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -24,12 +28,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c8e"
     },
-    "price": 12.99,
+    "buyingPrice": 9.09,
+    "sellingPrice": 12.99,
     "quantity": 120,
     "minQuantity": 25,
     "manufacturer": "K&N",
     "partNumber": "P234567",
-    "barcode": "7891234567891"
+    "barcode": "7891234567891",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -40,12 +48,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c87"
     },
-    "price": 35.99,
+    "buyingPrice": 25.19,
+    "sellingPrice": 35.99,
     "quantity": 80,
     "minQuantity": 20,
     "manufacturer": "Brembo",
     "partNumber": "P345678",
-    "barcode": "7891234567892"
+    "barcode": "7891234567892",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -56,12 +68,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c87"
     },
-    "price": 65.99,
+    "buyingPrice": 46.19,
+    "sellingPrice": 65.99,
     "quantity": 60,
     "minQuantity": 15,
     "manufacturer": "Brembo",
     "partNumber": "P456789",
-    "barcode": "7891234567893"
+    "barcode": "7891234567893",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -72,12 +88,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c90"
     },
-    "price": 28.99,
+    "buyingPrice": 20.29,
+    "sellingPrice": 28.99,
     "quantity": 100,
     "minQuantity": 20,
     "manufacturer": "NGK",
     "partNumber": "P567890",
-    "barcode": "7891234567894"
+    "barcode": "7891234567894",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -88,12 +108,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c89"
     },
-    "price": 89.99,
+    "buyingPrice": 62.99,
+    "sellingPrice": 89.99,
     "quantity": 40,
     "minQuantity": 10,
     "manufacturer": "Optima",
     "partNumber": "P678901",
-    "barcode": "7891234567895"
+    "barcode": "7891234567895",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -104,12 +128,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c89"
     },
-    "price": 129.99,
+    "buyingPrice": 90.99,
+    "sellingPrice": 129.99,
     "quantity": 25,
     "minQuantity": 5,
     "manufacturer": "Denso",
     "partNumber": "P789012",
-    "barcode": "7891234567896"
+    "barcode": "7891234567896",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -120,12 +148,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c8a"
     },
-    "price": 119.99,
+    "buyingPrice": 83.99,
+    "sellingPrice": 119.99,
     "quantity": 30,
     "minQuantity": 8,
     "manufacturer": "Mishimoto",
     "partNumber": "P890123",
-    "barcode": "7891234567897"
+    "barcode": "7891234567897",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -136,12 +168,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c8a"
     },
-    "price": 49.99,
+    "buyingPrice": 34.99,
+    "sellingPrice": 49.99,
     "quantity": 45,
     "minQuantity": 10,
     "manufacturer": "Gates",
     "partNumber": "P901234",
-    "barcode": "7891234567898"
+    "barcode": "7891234567898",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -152,12 +188,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c8b"
     },
-    "price": 79.99,
+    "buyingPrice": 55.99,
+    "sellingPrice": 79.99,
     "quantity": 35,
     "minQuantity": 8,
     "manufacturer": "Walbro",
     "partNumber": "P012345",
-    "barcode": "7891234567899"
+    "barcode": "7891234567899",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -168,12 +208,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c88"
     },
-    "price": 59.99,
+    "buyingPrice": 41.99,
+    "sellingPrice": 59.99,
     "quantity": 40,
     "minQuantity": 10,
     "manufacturer": "Bilstein",
     "partNumber": "P123457",
-    "barcode": "7891234567900"
+    "barcode": "7891234567900",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -184,12 +228,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c8f"
     },
-    "price": 89.99,
+    "buyingPrice": 62.99,
+    "sellingPrice": 89.99,
     "quantity": 30,
     "minQuantity": 8,
     "manufacturer": "Gates",
     "partNumber": "P234568",
-    "barcode": "7891234567901"
+    "barcode": "7891234567901",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -200,12 +248,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c8f"
     },
-    "price": 19.99,
+    "buyingPrice": 13.99,
+    "sellingPrice": 19.99,
     "quantity": 70,
     "minQuantity": 15,
     "manufacturer": "Continental",
     "partNumber": "P345679",
-    "barcode": "7891234567902"
+    "barcode": "7891234567902",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -216,12 +268,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c94"
     },
-    "price": 129.99,
+    "buyingPrice": 90.99,
+    "sellingPrice": 129.99,
     "quantity": 20,
     "minQuantity": 5,
     "manufacturer": "TYC",
     "partNumber": "P456790",
-    "barcode": "7891234567903"
+    "barcode": "7891234567903",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -232,12 +288,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c97"
     },
-    "price": 49.99,
+    "buyingPrice": 34.99,
+    "sellingPrice": 49.99,
     "quantity": 50,
     "minQuantity": 12,
     "manufacturer": "Denso",
     "partNumber": "P567891",
-    "barcode": "7891234567904"
+    "barcode": "7891234567904",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -248,12 +308,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c9a"
     },
-    "price": 45.99,
+    "buyingPrice": 32.19,
+    "sellingPrice": 45.99,
     "quantity": 40,
     "minQuantity": 10,
     "manufacturer": "Timken",
     "partNumber": "P678902",
-    "barcode": "7891234567905"
+    "barcode": "7891234567905",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -264,12 +328,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c98"
     },
-    "price": 189.99,
+    "buyingPrice": 132.99,
+    "sellingPrice": 189.99,
     "quantity": 15,
     "minQuantity": 5,
     "manufacturer": "Denso",
     "partNumber": "P789013",
-    "barcode": "7891234567906"
+    "barcode": "7891234567906",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -280,12 +348,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c8d"
     },
-    "price": 109.99,
+    "buyingPrice": 76.99,
+    "sellingPrice": 109.99,
     "quantity": 25,
     "minQuantity": 6,
     "manufacturer": "A1 Cardone",
     "partNumber": "P890124",
-    "barcode": "7891234567907"
+    "barcode": "7891234567907",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -296,12 +368,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c8c"
     },
-    "price": 159.99,
+    "buyingPrice": 111.99,
+    "sellingPrice": 159.99,
     "quantity": 20,
     "minQuantity": 5,
     "manufacturer": "Walker",
     "partNumber": "P901235",
-    "barcode": "7891234567908"
+    "barcode": "7891234567908",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -312,12 +388,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c86"
     },
-    "price": 29.99,
+    "buyingPrice": 20.99,
+    "sellingPrice": 29.99,
     "quantity": 60,
     "minQuantity": 15,
     "manufacturer": "ATP",
     "partNumber": "P012346",
-    "barcode": "7891234567909"
+    "barcode": "7891234567909",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -328,12 +408,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c96"
     },
-    "price": 24.99,
+    "buyingPrice": 17.49,
+    "sellingPrice": 24.99,
     "quantity": 100,
     "minQuantity": 25,
     "manufacturer": "Mobil",
     "partNumber": "P123458",
-    "barcode": "7891234567910"
+    "barcode": "7891234567910",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -344,12 +428,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c96"
     },
-    "price": 8.99,
+    "buyingPrice": 6.29,
+    "sellingPrice": 8.99,
     "quantity": 80,
     "minQuantity": 20,
     "manufacturer": "Prestone",
     "partNumber": "P234569",
-    "barcode": "7891234567911"
+    "barcode": "7891234567911",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -360,12 +448,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c93"
     },
-    "price": 29.99,
+    "buyingPrice": 20.99,
+    "sellingPrice": 29.99,
     "quantity": 70,
     "minQuantity": 15,
     "manufacturer": "Bosch",
     "partNumber": "P345680",
-    "barcode": "7891234567912"
+    "barcode": "7891234567912",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -376,12 +468,16 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c92"
     },
-    "price": 49.99,
+    "buyingPrice": 34.99,
+    "sellingPrice": 49.99,
     "quantity": 40,
     "minQuantity": 10,
     "manufacturer": "WeatherTech",
     "partNumber": "P456791",
-    "barcode": "7891234567913"
+    "barcode": "7891234567913",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   },
   {
     "_id": {
@@ -392,11 +488,15 @@
     "category": {
       "$oid": "60d21b4667d0d8992e610c99"
     },
-    "price": 19.99,
+    "buyingPrice": 13.99,
+    "sellingPrice": 19.99,
     "quantity": 50,
     "minQuantity": 12,
     "manufacturer": "Fel-Pro",
     "partNumber": "P567892",
-    "barcode": "7891234567914"
+    "barcode": "7891234567914",
+    "user": {
+      "$oid": "67d580341d40dbf5dfe6d761"
+    }
   }
 ]

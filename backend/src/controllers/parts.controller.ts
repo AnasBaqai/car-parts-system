@@ -68,6 +68,12 @@ export const createPart = async (
 ): Promise<void> => {
   try {
     console.log("Creating part with data:", req.body);
+
+    // Handle empty barcode string
+    if (req.body.barcode === "") {
+      req.body.barcode = null;
+    }
+
     // Add user ID to the part
     const partData = {
       ...req.body,
@@ -89,6 +95,11 @@ export const updatePart = async (
   try {
     console.log("Updating part with ID:", req.params.id);
     console.log("Update data:", JSON.stringify(req.body, null, 2));
+
+    // Handle empty barcode string
+    if (req.body.barcode === "") {
+      req.body.barcode = null;
+    }
 
     // Find and update part by ID and user
     const part = await Part.findOneAndUpdate(

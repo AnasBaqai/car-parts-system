@@ -116,12 +116,18 @@ const Parts: React.FC = () => {
         typeof formData.category === "object" && formData.category !== null
           ? formData.category._id
           : formData.category,
-      price:
-        typeof formData.price === "string"
-          ? formData.price === ""
+      buyingPrice:
+        typeof formData.buyingPrice === "string"
+          ? formData.buyingPrice === ""
             ? 0
-            : Number(formData.price)
-          : formData.price,
+            : Number(formData.buyingPrice)
+          : formData.buyingPrice,
+      sellingPrice:
+        typeof formData.sellingPrice === "string"
+          ? formData.sellingPrice === ""
+            ? 0
+            : Number(formData.sellingPrice)
+          : formData.sellingPrice,
       quantity:
         typeof formData.quantity === "string"
           ? formData.quantity === ""
@@ -237,7 +243,8 @@ const Parts: React.FC = () => {
               <TableCell>Name</TableCell>
               <TableCell>Category</TableCell>
               <TableCell>Manufacturer</TableCell>
-              <TableCell align="right">Price</TableCell>
+              <TableCell align="right">Buying Price</TableCell>
+              <TableCell align="right">Selling Price</TableCell>
               <TableCell align="right">Quantity</TableCell>
               <TableCell>Barcode</TableCell>
               <TableCell>Status</TableCell>
@@ -251,7 +258,10 @@ const Parts: React.FC = () => {
                 <TableCell>{getCategoryName(part.category)}</TableCell>
                 <TableCell>{part.manufacturer}</TableCell>
                 <TableCell align="right">
-                  {formatCurrency(part.price)}
+                  {formatCurrency(part.buyingPrice)}
+                </TableCell>
+                <TableCell align="right">
+                  {formatCurrency(part.sellingPrice)}
                 </TableCell>
                 <TableCell align="right">{part.quantity}</TableCell>
                 <TableCell>

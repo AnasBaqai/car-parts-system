@@ -31,6 +31,7 @@ import {
   Tooltip,
   Tab,
   Tabs,
+  Chip,
 } from "@mui/material";
 import {
   ShoppingCart as CartIcon,
@@ -63,9 +64,11 @@ interface Category {
 interface ApiPart {
   _id: string;
   name: string;
-  price: number;
+  buyingPrice: number;
+  sellingPrice: number;
   category: Category | string;
   quantity: number;
+  minQuantity: number;
   barcode?: string;
 }
 
@@ -220,7 +223,7 @@ const CreateOrder: React.FC = () => {
         return {
           _id: partId,
           name: part!.name,
-          price: part!.price,
+          price: part!.sellingPrice,
           quantity: parseInt(quantity),
         };
       });
@@ -381,7 +384,7 @@ const CreateOrder: React.FC = () => {
         {
           _id: part._id,
           name: part.name,
-          price: part.price,
+          price: part.sellingPrice,
           quantity: 1,
         },
       ]);
@@ -825,53 +828,35 @@ const CreateOrder: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredParts.map((part) => {
-                  const isOverStock =
-                    tempQuantity[part._id] &&
-                    parseInt(tempQuantity[part._id]) > part.quantity;
-                  return (
-                    <TableRow
-                      key={part._id}
-                      sx={{
-                        backgroundColor: isOverStock
-                          ? "error.light"
-                          : "inherit",
-                      }}
-                    >
-                      <TableCell>{part.name}</TableCell>
-                      <TableCell>{formatCurrency(part.price)}</TableCell>
-                      <TableCell>
-                        <Typography
-                          color={part.quantity < 5 ? "error" : "inherit"}
-                          sx={{
-                            fontWeight: part.quantity < 5 ? "bold" : "normal",
-                          }}
-                        >
-                          {part.quantity} in stock
-                        </Typography>
-                      </TableCell>
-                      <TableCell align="right">
-                        <TextField
+                {filteredParts.map((part) => (
+                  <TableRow key={part._id}>
+                    <TableCell>{part.name}</TableCell>
+                    <TableCell>{formatCurrency(part.sellingPrice)}</TableCell>
+                    <TableCell>
+                      {part.quantity <= part.minQuantity ? (
+                        <Chip
+                          label={`${part.quantity} (Low)`}
                           size="small"
-                          type="text"
-                          value={tempQuantity[part._id] || ""}
-                          onChange={(e) =>
-                            handleQuantityChange(part._id, e.target.value)
-                          }
-                          error={Boolean(isOverStock)}
-                          helperText={
-                            isOverStock ? "Exceeds available stock" : ""
-                          }
-                          inputProps={{
-                            style: { textAlign: "right" },
-                            max: part.quantity,
-                          }}
-                          sx={{ width: 100 }}
+                          color="error"
                         />
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
+                      ) : (
+                        part.quantity
+                      )}
+                    </TableCell>
+                    <TableCell align="right">
+                      <TextField
+                        type="number"
+                        size="small"
+                        value={tempQuantity[part._id] || ""}
+                        onChange={(e) =>
+                          handleQuantityChange(part._id, e.target.value)
+                        }
+                        inputProps={{ min: 1, max: part.quantity }}
+                        sx={{ width: 80 }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>

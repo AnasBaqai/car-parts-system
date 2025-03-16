@@ -4,7 +4,8 @@ export interface IPart extends Document {
   name: string;
   description?: string;
   category: mongoose.Types.ObjectId;
-  price: number;
+  buyingPrice: number;
+  sellingPrice: number;
   quantity: number;
   minQuantity: number;
   manufacturer?: string;
@@ -28,7 +29,12 @@ const partSchema = new Schema(
       ref: "Category",
       required: true,
     },
-    price: {
+    buyingPrice: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    sellingPrice: {
       type: Number,
       required: true,
       min: 0,
@@ -66,6 +72,15 @@ const partSchema = new Schema(
     timestamps: true,
   }
 );
+
+// Pre-save hook to convert empty barcode strings to null
+partSchema.pre("save", function (next) {
+  // If barcode is an empty string, set it to null
+  if (this.barcode === "") {
+    this.barcode = null;
+  }
+  next();
+});
 
 // Create compound indexes for uniqueness per user
 partSchema.index({ partNumber: 1, user: 1 }, { unique: true });
