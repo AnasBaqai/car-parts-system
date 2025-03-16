@@ -16,6 +16,8 @@ interface Order {
   status: "PENDING" | "COMPLETED" | "CANCELLED";
   customerName?: string;
   customerPhone?: string;
+  customerEmail?: string;
+  carRegistration?: string;
   createdAt: string;
 }
 
@@ -25,6 +27,8 @@ export interface CreateOrderRequest {
   status: "PENDING" | "COMPLETED" | "CANCELLED";
   customerName?: string;
   customerPhone?: string;
+  customerEmail?: string;
+  carRegistration?: string;
   paymentMethod?: "CASH" | "CARD";
 }
 

@@ -18,6 +18,8 @@ export type GenerateReceiptInput = {
   status: "PENDING" | "COMPLETED" | "CANCELLED";
   customerName?: string;
   customerPhone?: string;
+  customerEmail?: string;
+  carRegistration?: string;
   createdAt: string | Date;
   cashReceived?: number;
   changeAmount?: number;
@@ -101,6 +103,10 @@ export const generateReceipt = (
       `Date: ${date}`,
       `Customer: ${order.customerName || "Walk-in Customer"}`,
       ...(order.customerPhone ? [`Phone: ${order.customerPhone}`] : []),
+      ...(order.customerEmail ? [`Email: ${order.customerEmail}`] : []),
+      ...(order.carRegistration
+        ? [`Car Registration: ${order.carRegistration}`]
+        : []),
       "------------------------------------------------",
       "ITEM                  QTY   PRICE   TOTAL",
       "------------------------------------------------",

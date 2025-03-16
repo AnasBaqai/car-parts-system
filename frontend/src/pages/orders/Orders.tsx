@@ -57,6 +57,8 @@ interface Order {
   status: "PENDING" | "COMPLETED" | "CANCELLED";
   customerName?: string;
   customerPhone?: string;
+  customerEmail?: string;
+  carRegistration?: string;
   createdAt: string;
 }
 
@@ -148,10 +150,8 @@ const Orders: React.FC = () => {
   const filteredOrders = orders
     .filter(
       (order) =>
-        (order.customerName &&
-          order.customerName.toLowerCase().includes(search.toLowerCase())) ||
-        (order.orderNumber &&
-          order.orderNumber.toLowerCase().includes(search.toLowerCase()))
+        order.customerName &&
+        order.customerName.toLowerCase().includes(search.toLowerCase())
     )
     .sort(
       (a, b) =>
@@ -329,10 +329,10 @@ const Orders: React.FC = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Search orders"
+                label="Search orders by customer name"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search by customer name"
+                placeholder="Enter customer name"
               />
             </Grid>
             <Grid item xs={12}>
@@ -369,7 +369,6 @@ const Orders: React.FC = () => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Order Number</TableCell>
               <TableCell>Date</TableCell>
               <TableCell>Customer</TableCell>
               <TableCell>Items</TableCell>
@@ -383,13 +382,22 @@ const Orders: React.FC = () => {
           <TableBody>
             {paginatedOrders.map((order) => (
               <TableRow key={order._id}>
-                <TableCell>{order.orderNumber}</TableCell>
                 <TableCell>{formatDate(order.createdAt)}</TableCell>
                 <TableCell>
                   {order.customerName || "Walk-in Customer"}
                   {order.customerPhone && (
                     <Typography variant="caption" display="block">
                       {order.customerPhone}
+                    </Typography>
+                  )}
+                  {order.customerEmail && (
+                    <Typography variant="caption" display="block">
+                      {order.customerEmail}
+                    </Typography>
+                  )}
+                  {order.carRegistration && (
+                    <Typography variant="caption" display="block">
+                      Car: {order.carRegistration}
                     </Typography>
                   )}
                 </TableCell>
@@ -429,15 +437,28 @@ const Orders: React.FC = () => {
                 </TableCell>
                 <TableCell>
                   {order.status === "PENDING" ? (
-                    <Tooltip title="Process Payment">
-                      <IconButton
-                        color="primary"
-                        onClick={() => handlePaymentClick(order)}
-                        size="small"
-                      >
-                        <PaymentIcon />
-                      </IconButton>
-                    </Tooltip>
+                    <Box sx={{ display: "flex" }}>
+                      <Tooltip title="Process Payment">
+                        <IconButton
+                          color="primary"
+                          onClick={() => handlePaymentClick(order)}
+                          size="small"
+                        >
+                          <PaymentIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Cancel Order">
+                        <IconButton
+                          color="error"
+                          onClick={() =>
+                            handleStatusChange(order._id, "CANCELLED")
+                          }
+                          size="small"
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
                   ) : order.status === "COMPLETED" ? (
                     <Tooltip title="Completed">
                       <CheckCircleIcon color="success" />
@@ -471,9 +492,6 @@ const Orders: React.FC = () => {
         <DialogContent>
           <Grid container spacing={2} sx={{ mt: 1 }}>
             <Grid item xs={12}>
-              <Typography variant="body1">
-                Order Number: {paymentData.orderNumber}
-              </Typography>
               <Typography variant="h6" sx={{ mt: 1 }}>
                 Total Amount: {formatCurrency(paymentData.totalAmount)}
               </Typography>

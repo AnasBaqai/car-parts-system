@@ -14,6 +14,8 @@ export interface IOrder extends Document {
   status: "PENDING" | "COMPLETED" | "CANCELLED";
   customerName?: string;
   customerPhone?: string;
+  customerEmail?: string;
+  carRegistration?: string;
   user: mongoose.Types.ObjectId;
 }
 
@@ -60,6 +62,12 @@ const orderSchema = new Schema(
       type: String,
     },
     customerPhone: {
+      type: String,
+    },
+    customerEmail: {
+      type: String,
+    },
+    carRegistration: {
       type: String,
     },
     user: {

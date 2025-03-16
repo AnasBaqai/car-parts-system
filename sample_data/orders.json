@@ -25,6 +25,8 @@
     "status": "COMPLETED",
     "customerName": "John Smith",
     "customerPhone": "555-123-4567",
+    "customerEmail": "john.smith@example.com",
+    "carRegistration": "AB12 CDE",
     "createdAt": "2023-06-15T10:30:00.000Z",
     "user": {
       "$oid": "67d580341d40dbf5dfe6d761"
@@ -56,6 +58,8 @@
     "status": "COMPLETED",
     "customerName": "Sarah Johnson",
     "customerPhone": "555-234-5678",
+    "customerEmail": "sarah.j@example.com",
+    "carRegistration": "XY34 ZAB",
     "createdAt": "2023-06-16T14:45:00.000Z",
     "user": {
       "$oid": "67d580341d40dbf5dfe6d761"
@@ -80,6 +84,8 @@
     "status": "COMPLETED",
     "customerName": "Michael Brown",
     "customerPhone": "555-345-6789",
+    "customerEmail": "mbrown@example.com",
+    "carRegistration": "CD45 EFG",
     "createdAt": "2023-06-18T09:15:00.000Z",
     "user": {
       "$oid": "67d580341d40dbf5dfe6d761"
@@ -118,6 +124,8 @@
     "status": "COMPLETED",
     "customerName": "Emily Davis",
     "customerPhone": "555-456-7890",
+    "customerEmail": "emily.davis@example.com",
+    "carRegistration": "EF56 GHI",
     "createdAt": "2023-06-20T16:30:00.000Z",
     "user": {
       "$oid": "67d580341d40dbf5dfe6d761"
@@ -142,6 +150,8 @@
     "status": "COMPLETED",
     "customerName": "David Wilson",
     "customerPhone": "555-567-8901",
+    "customerEmail": "dwilson@example.com",
+    "carRegistration": "GH67 IJK",
     "createdAt": "2023-06-22T11:20:00.000Z",
     "user": {
       "$oid": "67d580341d40dbf5dfe6d761"

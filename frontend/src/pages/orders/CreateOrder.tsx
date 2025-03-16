@@ -110,6 +110,8 @@ const CreateOrder: React.FC = () => {
   const [selectedParts, setSelectedParts] = useState<SelectedPart[]>([]);
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
+  const [carRegistration, setCarRegistration] = useState("");
   const [openPartsModal, setOpenPartsModal] = useState(false);
   const [tempQuantity, setTempQuantity] = useState<{ [key: string]: string }>(
     {}
@@ -283,6 +285,8 @@ const CreateOrder: React.FC = () => {
         status: "PENDING" as const,
         customerName: customerName || undefined,
         customerPhone: customerPhone || undefined,
+        customerEmail: customerEmail || undefined,
+        carRegistration: carRegistration || undefined,
       };
 
       const result = await dispatch(createOrder(orderData)).unwrap();
@@ -460,6 +464,8 @@ const CreateOrder: React.FC = () => {
     setSelectedParts([]);
     setCustomerName("");
     setCustomerPhone("");
+    setCustomerEmail("");
+    setCarRegistration("");
     setSelectedCategory(null);
     setBarcodeInput("");
     setCreatedOrderId(null);
@@ -525,6 +531,22 @@ const CreateOrder: React.FC = () => {
                     label="Customer Phone"
                     value={customerPhone}
                     onChange={(e) => setCustomerPhone(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Customer Email"
+                    value={customerEmail}
+                    onChange={(e) => setCustomerEmail(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    fullWidth
+                    label="Car Registration"
+                    value={carRegistration}
+                    onChange={(e) => setCarRegistration(e.target.value)}
                   />
                 </Grid>
               </Grid>

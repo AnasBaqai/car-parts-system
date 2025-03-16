@@ -53,6 +53,8 @@ export const createOrder = async (
       status,
       customerName,
       customerPhone,
+      customerEmail,
+      carRegistration,
       paymentMethod,
     } = req.body;
 
@@ -80,6 +82,8 @@ export const createOrder = async (
       status,
       customerName,
       customerPhone,
+      customerEmail,
+      carRegistration,
       paymentMethod,
       user: req.user._id,
     };
